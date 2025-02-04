@@ -27,6 +27,12 @@ const ManageCashiers = () => {
             setMessage('Username and password are required.');
             return;
         }
+        // Prompt confirmation for addition
+        const confirmation = window.prompt("Type 'add' to confirm adding the cashier.");
+        if (confirmation !== 'add') {
+            setMessage('Addition not confirmed.');
+            return;
+        }
         try {
             const response = await API.post('/admin/cashiers', newCashier);
             setMessage('Cashier added successfully!');
@@ -39,6 +45,12 @@ const ManageCashiers = () => {
     };
 
     const handleDeleteCashier = async (id) => {
+        // Prompt confirmation for deletion
+        const confirmation = window.prompt("Type 'delete' to confirm deleting the cashier.");
+        if (confirmation !== 'delete') {
+            setMessage('Deletion not confirmed.');
+            return;
+        }
         try {
             await API.delete(`/admin/cashiers/${id}`);
             setMessage('Cashier deleted successfully!');

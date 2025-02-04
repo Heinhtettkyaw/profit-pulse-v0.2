@@ -121,6 +121,7 @@ const CombinedProfitLossReport = () => {
                                 <th>Quantity Sold</th>
                                 <th>Sold Price</th>
                                 <th>Buyer Name</th>
+                                <th>Cashier</th>
                                 <th>Timestamp</th>
                                 <th>Profit</th>
                             </tr>
@@ -135,6 +136,7 @@ const CombinedProfitLossReport = () => {
                                         <td>{sale.quantitySold}</td>
                                         <td>{sale.soldPrice}</td>
                                         <td>{sale.buyerName}</td>
+                                        <td>{sale.cashierUsername}</td>
                                         <td>{sale.timestamp ? new Date(sale.timestamp).toLocaleString() : ''}</td>
                                         <td>{profit}</td>
                                     </tr>
@@ -157,6 +159,7 @@ const CombinedProfitLossReport = () => {
                                 <th>Quantity Sold</th>
                                 <th>Sold Price</th>
                                 <th>Buyer Name</th>
+                                <th>Cashier</th>
                                 <th>Timestamp</th>
                                 <th>Loss</th>
                             </tr>
@@ -171,6 +174,7 @@ const CombinedProfitLossReport = () => {
                                         <td>{sale.quantitySold}</td>
                                         <td>{sale.soldPrice}</td>
                                         <td>{sale.buyerName}</td>
+                                        <td>{sale.cashierUsername}</td>
                                         <td>{sale.timestamp ? new Date(sale.timestamp).toLocaleString() : ''}</td>
                                         <td>{loss}</td>
                                     </tr>

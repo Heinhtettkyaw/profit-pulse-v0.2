@@ -1,3 +1,4 @@
+// src/components/InventoryManager.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -49,6 +50,11 @@ const InventoryManager = () => {
     };
 
     const handleDeleteItem = async (id) => {
+        // Show confirmation dialog before deletion
+        if (!window.confirm('Are you sure you want to delete this item?')) {
+            setMessage('Deletion cancelled.');
+            return;
+        }
         try {
             await API.delete(`/admin/inventory/delete/${id}`);
             setMessage('Item deleted successfully!');
