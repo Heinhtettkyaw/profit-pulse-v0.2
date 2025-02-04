@@ -42,7 +42,7 @@ const ProfitLossReport = () => {
 
     return (
         <div>
-            <h3>Profit & Loss Report</h3>
+            <h3>Overall Profit & Loss Report</h3>
             <div>
                 <input
                     type="number"

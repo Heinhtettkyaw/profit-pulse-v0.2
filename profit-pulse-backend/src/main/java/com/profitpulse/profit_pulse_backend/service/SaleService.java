@@ -26,11 +26,9 @@ public class SaleService {
             throw new RuntimeException("Insufficient stock");
         }
 
-        // Deduct sold quantity from inventory
         inventory.setQuantity(inventory.getQuantity() - saleDTO.getQuantitySold());
         inventoryRepository.save(inventory);
 
-        // Create and save sale record
         Sale sale = new Sale();
         sale.setInventory(inventory);
         sale.setQuantitySold(saleDTO.getQuantitySold());
@@ -42,5 +40,16 @@ public class SaleService {
 
     public List<Sale> getAllSales() {
         return salesRepository.findAll();
+    }
+
+    // New method: Get sales for a specific month filtered by profit sign.
+    public List<Sale> getSalesTransactionsByMonthAndProfit(int year, int month, boolean profitPositive) {
+        List<Sale> sales = salesRepository.findAll();
+        return sales.stream().filter(sale -> {
+            if (sale.getTimestamp() == null) return false;
+            if (sale.getTimestamp().getYear() != year || sale.getTimestamp().getMonthValue() != month) return false;
+            double profit = (sale.getSoldPrice() - sale.getInventory().getOriginalPrice()) * sale.getQuantitySold();
+            return profitPositive ? profit > 0 : profit < 0;
+        }).toList();
     }
 }

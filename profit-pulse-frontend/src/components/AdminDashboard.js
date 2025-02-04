@@ -1,3 +1,4 @@
+// src/components/AdminDashboard.js
 import React, { useContext } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -20,16 +21,16 @@ const AdminDashboard = () => {
                         <Link to="inventory">Inventory Manager</Link>
                     </li>
                     <li style={{ marginBottom: '5px' }}>
-                        <Link to="profit-loss">Profit & Loss Report</Link>
+                        <Link to="profit-loss">Overall Profit & Loss Report</Link>
                     </li>
-                    {/*<li style={{ marginBottom: '5px' }}>*/}
-                    {/*    <Link to="report">Search Reports</Link>*/}
-                    {/*</li>*/}
                     <li style={{ marginBottom: '5px' }}>
                         <Link to="sales-transactions">Sales Transactions</Link>
                     </li>
                     <li style={{ marginBottom: '5px' }}>
                         <Link to="supplier-transactions">Supplier Transactions</Link>
+                    </li>
+                    <li style={{ marginBottom: '5px' }}>
+                        <Link to="monthly-report"> Profit/Loss Details Report</Link>
                     </li>
                 </ul>
             </nav>

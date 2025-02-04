@@ -9,8 +9,8 @@ import ProfitLossReport from './components/ProfitLossReport';
 import SalesRecorder from './components/SalesRecorder';
 import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
+import CombinedProfitLossReport from './components/CombinedProfitLossReport';
 import { AuthContext } from './context/AuthContext';
-import ReportView from "./components/ReportView";
 
 function App() {
   const { auth } = useContext(AuthContext);
@@ -31,9 +31,9 @@ function App() {
           <Route path="/admin/*" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
             <Route path="inventory" element={<InventoryManager />} />
             <Route path="profit-loss" element={<ProfitLossReport />} />
-            {/*<Route path="report" element={<ReportView />} />*/}
             <Route path="sales-transactions" element={<TransactionList />} />
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />
+            <Route path="monthly-report" element={<CombinedProfitLossReport />} />
             <Route index element={<InventoryManager />} />
           </Route>
 
@@ -50,4 +50,3 @@ function App() {
 }
 
 export default App;
-
