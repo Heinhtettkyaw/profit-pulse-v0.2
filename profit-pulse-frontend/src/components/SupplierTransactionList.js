@@ -7,11 +7,10 @@ const SupplierTransactionList = () => {
     const [supplierQuery, setSupplierQuery] = useState('');
     const [message, setMessage] = useState('');
 
-    const fetchTransactions = async () => {
+    // Fetch all supplier transactions (all inventory imports)
+    const fetchAllTransactions = async () => {
         try {
-            const response = supplierQuery.trim()
-                ? await API.get('/admin/report/inventory/search', { params: { supplier: supplierQuery } })
-                : await API.get('/admin/report/suppliers');
+            const response = await API.get('/admin/report/suppliers');
             setTransactions(response.data);
             setMessage('');
         } catch (error) {
@@ -20,13 +19,27 @@ const SupplierTransactionList = () => {
         }
     };
 
-    useEffect(() => {
-        fetchTransactions();
-    }, []);
-
-    const handleSearch = () => {
-        fetchTransactions();
+    // Search inventory by supplier name
+    const searchTransactions = async () => {
+        try {
+            if (supplierQuery.trim() === '') {
+                fetchAllTransactions();
+                return;
+            }
+            const response = await API.get('/admin/report/inventory/search', {
+                params: { supplier: supplierQuery },
+            });
+            setTransactions(response.data);
+            setMessage('');
+        } catch (error) {
+            console.error('Error searching supplier transactions:', error);
+            setMessage('Error searching supplier transactions.');
+        }
     };
+
+    useEffect(() => {
+        fetchAllTransactions();
+    }, []);
 
     return (
         <div>
@@ -39,7 +52,12 @@ const SupplierTransactionList = () => {
                     onChange={(e) => setSupplierQuery(e.target.value)}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
-                <button onClick={handleSearch} style={{ padding: '5px 10px' }}>Search</button>
+                <button onClick={searchTransactions} style={{ padding: '5px 10px', marginRight: '5px' }}>
+                    Search
+                </button>
+                <button onClick={fetchAllTransactions} style={{ padding: '5px 10px' }}>
+                    Show All Transactions
+                </button>
             </div>
             {message && <p>{message}</p>}
             {transactions.length > 0 ? (
