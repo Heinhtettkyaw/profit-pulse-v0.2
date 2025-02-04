@@ -13,8 +13,15 @@ public class ProfitLossController {
     @Autowired
     private ProfitLossService profitLossService;
 
+    // Overall profit/loss report
     @GetMapping
-    public ResponseEntity<ProfitLossDTO> getProfitLoss() {
+    public ResponseEntity<ProfitLossDTO> getOverallProfitLoss() {
         return ResponseEntity.ok(profitLossService.calculateProfitLoss());
+    }
+
+    // Monthly profit/loss report: expects "year" and "month" as query parameters.
+    @GetMapping("/monthly")
+    public ResponseEntity<ProfitLossDTO> getMonthlyProfitLoss(@RequestParam("year") int year, @RequestParam("month") int month) {
+        return ResponseEntity.ok(profitLossService.calculateMonthlyProfitLoss(year, month));
     }
 }

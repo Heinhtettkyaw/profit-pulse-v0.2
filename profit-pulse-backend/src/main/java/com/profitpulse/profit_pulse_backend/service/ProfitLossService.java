@@ -9,9 +9,11 @@ import java.util.List;
 
 @Service
 public class ProfitLossService {
+
     @Autowired
     private SalesRepository salesRepository;
 
+    // Overall Profit Loss Report
     public ProfitLossDTO calculateProfitLoss() {
         List<Sale> sales = salesRepository.findAll();
 
@@ -22,6 +24,25 @@ public class ProfitLossService {
 
         double totalRevenue = sales.stream().mapToDouble(sale -> sale.getSoldPrice() * sale.getQuantitySold()).sum();
         double totalCost = sales.stream().mapToDouble(sale -> sale.getInventory().getOriginalPrice() * sale.getQuantitySold()).sum();
+
+        return new ProfitLossDTO(totalRevenue, totalCost, totalProfit);
+    }
+
+    // Monthly Profit Loss Report
+    public ProfitLossDTO calculateMonthlyProfitLoss(int year, int month) {
+        List<Sale> sales = salesRepository.findAll();
+        double totalProfit = 0, totalRevenue = 0, totalCost = 0;
+
+        for (Sale sale : sales) {
+            if (sale.getTimestamp() != null &&
+                    sale.getTimestamp().getYear() == year &&
+                    sale.getTimestamp().getMonthValue() == month) {
+                double originalPrice = sale.getInventory().getOriginalPrice();
+                totalProfit += (sale.getSoldPrice() - originalPrice) * sale.getQuantitySold();
+                totalRevenue += sale.getSoldPrice() * sale.getQuantitySold();
+                totalCost += originalPrice * sale.getQuantitySold();
+            }
+        }
 
         return new ProfitLossDTO(totalRevenue, totalCost, totalProfit);
     }
