@@ -1,4 +1,3 @@
-// src/components/TransactionList.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -51,14 +50,14 @@ const TransactionList = () => {
                         <th>Quantity Sold</th>
                         <th>Sold Price</th>
                         <th>Buyer Name</th>
+                        <th>Cashier</th> {/* New column */}
                         <th>Timestamp</th>
                         <th>Profit</th>
                     </tr>
                     </thead>
                     <tbody>
                     {transactions.map((sale) => {
-                        const originalPrice = sale.inventory.originalPrice;
-                        const profit = (sale.soldPrice - originalPrice) * sale.quantitySold;
+                        const profit = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
                         return (
                             <tr key={sale.id}>
                                 <td>{sale.id}</td>
@@ -66,6 +65,7 @@ const TransactionList = () => {
                                 <td>{sale.quantitySold}</td>
                                 <td>{sale.soldPrice}</td>
                                 <td>{sale.buyerName}</td>
+                                <td>{sale.cashierUsername}</td> {/* Display cashier username */}
                                 <td>{sale.timestamp ? new Date(sale.timestamp).toLocaleString() : ''}</td>
                                 <td>{profit}</td>
                             </tr>

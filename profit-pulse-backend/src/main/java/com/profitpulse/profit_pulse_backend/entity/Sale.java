@@ -5,8 +5,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +22,7 @@ public class Sale {
     private double soldPrice;      // Price per unit sold
     private String buyerName;      // Buyer’s name
     private LocalDateTime timestamp;  // Sale date and time
+
+    // New field: records which cashier recorded the sale
+    private String cashierUsername;
 }
