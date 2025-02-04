@@ -10,6 +10,7 @@ import SalesRecorder from './components/SalesRecorder';
 import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
+import ManageCashiers from './components/ManageCashiers';
 import { AuthContext } from './context/AuthContext';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
             <Route path="sales-transactions" element={<TransactionList />} />
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />
             <Route path="monthly-report" element={<CombinedProfitLossReport />} />
+            <Route path="manage-cashiers" element={<ManageCashiers />} />
             <Route index element={<InventoryManager />} />
           </Route>
 

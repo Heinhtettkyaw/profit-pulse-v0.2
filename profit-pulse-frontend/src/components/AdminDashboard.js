@@ -16,25 +16,28 @@ const AdminDashboard = () => {
         <div style={{ padding: '20px' }}>
             <h2>Admin Dashboard</h2>
             <nav>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li style={{ marginBottom: '5px' }}>
+                <ul style={{listStyleType: 'none', padding: 0}}>
+                    <li style={{marginBottom: '5px'}}>
                         <Link to="inventory">Inventory Manager</Link>
                     </li>
-                    <li style={{ marginBottom: '5px' }}>
+                    <li style={{marginBottom: '5px'}}>
                         <Link to="profit-loss">Overall Profit & Loss Report</Link>
                     </li>
-                    <li style={{ marginBottom: '5px' }}>
+                    <li style={{marginBottom: '5px'}}>
                         <Link to="sales-transactions">Sales Transactions</Link>
                     </li>
-                    <li style={{ marginBottom: '5px' }}>
+                    <li style={{marginBottom: '5px'}}>
                         <Link to="supplier-transactions">Supplier Transactions</Link>
                     </li>
-                    <li style={{ marginBottom: '5px' }}>
+                    <li style={{marginBottom: '5px'}}>
                         <Link to="monthly-report"> Profit/Loss Details Report</Link>
+                    </li>
+                    <li style={{marginBottom: '5px'}}>
+                        <Link to="manage-cashiers">Manage Cashiers</Link>
                     </li>
                 </ul>
             </nav>
-            <button onClick={handleLogout} style={{ marginTop: '10px' }}>
+            <button onClick={handleLogout} style={{marginTop: '10px'}}>
                 Logout
             </button>
             <hr />
