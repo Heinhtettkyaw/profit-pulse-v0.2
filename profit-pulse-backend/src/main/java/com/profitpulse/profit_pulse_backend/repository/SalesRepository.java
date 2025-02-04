@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface SalesRepository extends JpaRepository<Sale, Long> {
     List<Sale> findByBuyerNameContainingIgnoreCase(String buyer);
+    List<Sale> findByBuyerNameContainingIgnoreCaseOrInventoryItemNameContainingIgnoreCase(String buyer, String itemName);
 }

@@ -74,22 +74,24 @@ const ProfitLossReport = () => {
                     <table border="1" cellPadding="5">
                         <thead>
                         <tr>
-                            <th>Total Investment Value</th>
+                            <th>Current Total Inventory Value</th>
+                            <th>Total Original Price(for sold products)</th>
                             <th>Total Sale Value</th>
-                            <th>Overall Profit</th>
                             <th>Total Profit (Profitable Sales)</th>
                             <th>Total Loss (Loss-making Sales)</th>
-                            <th>Total Inventory Value</th>
+                            <th>Overall Profit</th>
+
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
+                            <td>{report.totalInventoryValue}</td>
                             <td>{report.totalInvestmentValue}</td>
                             <td>{report.totalSaleValue}</td>
-                            <td>{report.overallProfit}</td>
                             <td>{report.profitOnly}</td>
                             <td>{report.lossOnly}</td>
-                            <td>{report.totalInventoryValue}</td>
+                            <td>{report.overallProfit}</td>
+
                         </tr>
                         </tbody>
                     </table>

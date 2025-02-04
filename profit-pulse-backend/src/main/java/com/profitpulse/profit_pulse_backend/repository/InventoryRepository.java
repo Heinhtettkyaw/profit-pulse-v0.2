@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findBySupplierNameContainingIgnoreCase(String supplier);
-
+    List<Inventory> findBySupplierNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(String supplier, String itemName);
 
 }

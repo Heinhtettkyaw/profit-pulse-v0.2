@@ -26,8 +26,8 @@ public class ReportController {
 
     // Search sales by buyer name
     @GetMapping("/sales/search")
-    public List<Sale> searchSales(@RequestParam("buyer") String buyer) {
-        return salesRepository.findByBuyerNameContainingIgnoreCase(buyer);
+    public List<Sale> searchSales(@RequestParam("query") String query) {
+        return salesRepository.findByBuyerNameContainingIgnoreCaseOrInventoryItemNameContainingIgnoreCase(query, query);
     }
 
     // Return all supplier transactions (all inventory imports)
@@ -38,7 +38,7 @@ public class ReportController {
 
     // Search inventory imports by supplier name
     @GetMapping("/inventory/search")
-    public List<Inventory> searchInventory(@RequestParam("supplier") String supplier) {
-        return inventoryRepository.findBySupplierNameContainingIgnoreCase(supplier);
+    public List<Inventory> searchInventory(@RequestParam("query") String query) {
+        return inventoryRepository.findBySupplierNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(query, query);
     }
 }

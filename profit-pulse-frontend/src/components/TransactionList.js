@@ -4,31 +4,30 @@ import API from '../services/api';
 
 const TransactionList = () => {
     const [transactions, setTransactions] = useState([]);
-    const [buyerQuery, setBuyerQuery] = useState('');
+    const [query, setQuery] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch all sales transactions (no filter)
+    // Fetch all sales transactions
     const fetchAllTransactions = async () => {
         try {
             const response = await API.get('/admin/report/sales');
             setTransactions(response.data);
             setMessage('');
         } catch (error) {
-            console.error('Error fetching all sales transactions:', error);
-            setMessage('Error fetching all sales transactions.');
+            console.error('Error fetching sales transactions:', error);
+            setMessage('Error fetching sales transactions.');
         }
     };
 
-    // Search transactions by buyer name
+    // Search transactions by buyer or item name
     const searchTransactions = async () => {
         try {
-            if (buyerQuery.trim() === '') {
-                // If search field is empty, show all
+            if (query.trim() === '') {
                 fetchAllTransactions();
                 return;
             }
             const response = await API.get('/admin/report/sales/search', {
-                params: { buyer: buyerQuery },
+                params: { query }
             });
             setTransactions(response.data);
             setMessage('');
@@ -48,9 +47,9 @@ const TransactionList = () => {
             <div>
                 <input
                     type="text"
-                    placeholder="Search by Buyer Name"
-                    value={buyerQuery}
-                    onChange={(e) => setBuyerQuery(e.target.value)}
+                    placeholder="Search by Buyer or Item Name"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
                 <button onClick={searchTransactions} style={{ padding: '5px 10px', marginRight: '5px' }}>

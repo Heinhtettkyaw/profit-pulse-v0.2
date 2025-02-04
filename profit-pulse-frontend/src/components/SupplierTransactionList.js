@@ -4,10 +4,10 @@ import API from '../services/api';
 
 const SupplierTransactionList = () => {
     const [transactions, setTransactions] = useState([]);
-    const [supplierQuery, setSupplierQuery] = useState('');
+    const [query, setQuery] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch all supplier transactions (all inventory imports)
+    // Fetch all supplier transactions
     const fetchAllTransactions = async () => {
         try {
             const response = await API.get('/admin/report/suppliers');
@@ -19,15 +19,15 @@ const SupplierTransactionList = () => {
         }
     };
 
-    // Search inventory by supplier name
+    // Search inventory imports by supplier or item name
     const searchTransactions = async () => {
         try {
-            if (supplierQuery.trim() === '') {
+            if (query.trim() === '') {
                 fetchAllTransactions();
                 return;
             }
             const response = await API.get('/admin/report/inventory/search', {
-                params: { supplier: supplierQuery },
+                params: { query }
             });
             setTransactions(response.data);
             setMessage('');
@@ -47,9 +47,9 @@ const SupplierTransactionList = () => {
             <div>
                 <input
                     type="text"
-                    placeholder="Search by Supplier Name"
-                    value={supplierQuery}
-                    onChange={(e) => setSupplierQuery(e.target.value)}
+                    placeholder="Search by Supplier or Item Name"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
                 <button onClick={searchTransactions} style={{ padding: '5px 10px', marginRight: '5px' }}>
