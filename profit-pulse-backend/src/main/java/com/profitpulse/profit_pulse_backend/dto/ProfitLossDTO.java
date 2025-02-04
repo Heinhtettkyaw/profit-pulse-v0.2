@@ -1,3 +1,4 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/dto/ProfitLossDTO.java
 package com.profitpulse.profit_pulse_backend.dto;
 
 import lombok.*;
@@ -7,14 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfitLossDTO {
-    // Total investment value = sum(originalPrice * quantitySold)
-    private double totalInvestmentValue;
-    // Total sale value = sum(soldPrice * quantitySold)
-    private double totalSaleValue;
-    // Overall profit = totalSaleValue - totalInvestmentValue
-    private double overallProfit;
-    // Total profit from profitable sales (soldPrice > originalPrice)
-    private double profitOnly;
-    // Total loss from loss-making sales (soldPrice < originalPrice)
-    private double lossOnly;
+    private double totalInvestmentValue; // Sum over sales: (originalPrice × quantitySold)
+    private double totalSaleValue;         // Sum over sales: (soldPrice × quantitySold)
+    private double overallProfit;          // totalSaleValue - totalInvestmentValue
+    private double profitOnly;             // Sum of profits for profitable sales
+    private double lossOnly;               // Sum of losses (as a positive number) for loss-making sales
+    private double totalInventoryValue;    // Value of all unsold inventory: ∑(originalPrice × quantity available)
 }

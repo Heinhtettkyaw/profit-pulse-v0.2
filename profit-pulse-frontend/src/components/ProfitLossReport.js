@@ -1,3 +1,4 @@
+// src/components/ProfitLossReport.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -7,11 +8,7 @@ const ProfitLossReport = () => {
     const [month, setMonth] = useState('');
     const [message, setMessage] = useState('');
 
-    // On mount, fetch overall report
-    useEffect(() => {
-        fetchOverallReport();
-    }, []);
-
+    // Fetch overall profit/loss report
     const fetchOverallReport = async () => {
         try {
             const response = await API.get('/admin/profit-loss');
@@ -19,10 +16,11 @@ const ProfitLossReport = () => {
             setMessage('');
         } catch (error) {
             console.error('Error fetching overall report:', error);
-            setMessage('Error fetching report.');
+            setMessage('Error fetching overall report.');
         }
     };
 
+    // Fetch monthly profit/loss report
     const fetchMonthlyReport = async () => {
         if (year.trim() === '' || month.trim() === '') {
             setMessage('Please enter both year and month.');
@@ -40,9 +38,14 @@ const ProfitLossReport = () => {
         }
     };
 
+    useEffect(() => {
+        // Load overall report by default
+        fetchOverallReport();
+    }, []);
+
     return (
         <div>
-            <h3>Profit & Loss Report</h3>
+            <h3>Overall Profit & Loss Report</h3>
             <div>
                 <input
                     type="number"
@@ -58,10 +61,10 @@ const ProfitLossReport = () => {
                     onChange={(e) => setMonth(e.target.value)}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
-                <button onClick={fetchMonthlyReport} style={{ padding: '5px 10px' }}>
+                <button onClick={fetchMonthlyReport} style={{ padding: '5px 10px', marginRight: '5px' }}>
                     Search by Month
                 </button>
-                <button onClick={fetchOverallReport} style={{ padding: '5px 10px', marginLeft: '5px' }}>
+                <button onClick={fetchOverallReport} style={{ padding: '5px 10px' }}>
                     Overall Report
                 </button>
             </div>
@@ -76,6 +79,7 @@ const ProfitLossReport = () => {
                             <th>Overall Profit</th>
                             <th>Total Profit (Profitable Sales)</th>
                             <th>Total Loss (Loss-making Sales)</th>
+                            <th>Total Inventory Value</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -85,6 +89,7 @@ const ProfitLossReport = () => {
                             <td>{report.overallProfit}</td>
                             <td>{report.profitOnly}</td>
                             <td>{report.lossOnly}</td>
+                            <td>{report.totalInventoryValue}</td>
                         </tr>
                         </tbody>
                     </table>
