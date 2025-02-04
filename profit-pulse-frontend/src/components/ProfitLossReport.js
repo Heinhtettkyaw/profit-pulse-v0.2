@@ -7,7 +7,7 @@ const ProfitLossReport = () => {
     const [month, setMonth] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch overall report on mount
+    // On mount, fetch overall report
     useEffect(() => {
         fetchOverallReport();
     }, []);
@@ -18,7 +18,7 @@ const ProfitLossReport = () => {
             setReport(response.data);
             setMessage('');
         } catch (error) {
-            console.error('Error fetching overall profit/loss report:', error);
+            console.error('Error fetching overall report:', error);
             setMessage('Error fetching report.');
         }
     };
@@ -35,14 +35,14 @@ const ProfitLossReport = () => {
             setReport(response.data);
             setMessage('');
         } catch (error) {
-            console.error('Error fetching monthly profit/loss report:', error);
+            console.error('Error fetching monthly report:', error);
             setMessage('Error fetching monthly report.');
         }
     };
 
     return (
         <div>
-            <h3>Overall Profit & Loss Report</h3>
+            <h3>Profit & Loss Report</h3>
             <div>
                 <input
                     type="number"
@@ -67,10 +67,27 @@ const ProfitLossReport = () => {
             </div>
             {message && <p>{message}</p>}
             {report ? (
-                <div style={{ marginTop: '10px' }}>
-                    <p>Total Revenue: {report.totalRevenue}</p>
-                    <p>Total Cost: {report.totalCost}</p>
-                    <p>Total Profit: {report.totalProfit}</p>
+                <div style={{ marginTop: '20px' }}>
+                    <table border="1" cellPadding="5">
+                        <thead>
+                        <tr>
+                            <th>Total Investment Value</th>
+                            <th>Total Sale Value</th>
+                            <th>Overall Profit</th>
+                            <th>Total Profit (Profitable Sales)</th>
+                            <th>Total Loss (Loss-making Sales)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{report.totalInvestmentValue}</td>
+                            <td>{report.totalSaleValue}</td>
+                            <td>{report.overallProfit}</td>
+                            <td>{report.profitOnly}</td>
+                            <td>{report.lossOnly}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             ) : (
                 <p>Loading report...</p>
