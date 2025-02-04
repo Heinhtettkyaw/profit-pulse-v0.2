@@ -1,3 +1,4 @@
+// src/components/CashierDashboard.js
 import React, { useContext } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -21,6 +22,9 @@ const CashierDashboard = () => {
                     </li>
                     <li style={{ marginBottom: '5px' }}>
                         <Link to="inventory">Inventory List</Link>
+                    </li>
+                    <li style={{ marginBottom: '5px' }}>
+                        <Link to="change-password">Change Password</Link>
                     </li>
                 </ul>
             </nav>

@@ -11,6 +11,7 @@ import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
 import ManageCashiers from './components/ManageCashiers';
+import ChangePassword from './components/ChangePassword';
 import { AuthContext } from './context/AuthContext';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           {/* Cashier Routes */}
           <Route path="/cashier/*" element={<ProtectedRoute><CashierDashboard /></ProtectedRoute>}>
             <Route path="sales" element={<SalesRecorder />} />
+            <Route path="change-password" element={<ChangePassword />} />
             <Route index element={<SalesRecorder />} />
           </Route>
 

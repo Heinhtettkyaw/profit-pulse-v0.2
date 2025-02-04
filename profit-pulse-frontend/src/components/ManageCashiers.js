@@ -27,7 +27,6 @@ const ManageCashiers = () => {
             setMessage('Username and password are required.');
             return;
         }
-        // Prompt confirmation for addition
         const confirmation = window.prompt("Type 'add' to confirm adding the cashier.");
         if (confirmation !== 'add') {
             setMessage('Addition not confirmed.');
@@ -45,7 +44,6 @@ const ManageCashiers = () => {
     };
 
     const handleDeleteCashier = async (id) => {
-        // Prompt confirmation for deletion
         const confirmation = window.prompt("Type 'delete' to confirm deleting the cashier.");
         if (confirmation !== 'delete') {
             setMessage('Deletion not confirmed.');
@@ -58,6 +56,22 @@ const ManageCashiers = () => {
         } catch (error) {
             console.error('Error deleting cashier:', error);
             setMessage('Error deleting cashier.');
+        }
+    };
+
+    const handleResetPassword = async (id) => {
+        const confirmation = window.prompt("Type 'reset' to confirm resetting the cashier's password to default.");
+        if (confirmation !== 'reset') {
+            setMessage('Reset not confirmed.');
+            return;
+        }
+        try {
+            await API.put(`/admin/cashiers/${id}/reset`);
+            setMessage('Cashier password reset successfully!');
+            fetchCashiers();
+        } catch (error) {
+            console.error('Error resetting cashier password:', error);
+            setMessage('Error resetting cashier password.');
         }
     };
 
@@ -101,6 +115,9 @@ const ManageCashiers = () => {
                             <td>{cashier.id}</td>
                             <td>{cashier.username}</td>
                             <td>
+                                <button onClick={() => handleResetPassword(cashier.id)} style={{ marginRight: '5px' }}>
+                                    Reset Password
+                                </button>
                                 <button onClick={() => handleDeleteCashier(cashier.id)}>
                                     Delete
                                 </button>

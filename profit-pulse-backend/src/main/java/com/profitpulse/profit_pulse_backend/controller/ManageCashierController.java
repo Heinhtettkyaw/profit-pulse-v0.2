@@ -29,10 +29,9 @@ public class ManageCashierController {
         return ResponseEntity.ok(cashiers);
     }
 
-    // Add a new cashier (expects JSON with username and password)
+    // Add a new cashier
     @PostMapping
     public ResponseEntity<?> addCashier(@RequestBody User cashier) {
-        // Check if user already exists
         Optional<User> existing = userRepository.findByUsername(cashier.getUsername());
         if (existing.isPresent()) {
             return ResponseEntity.badRequest().body("Username already exists.");
@@ -52,5 +51,18 @@ public class ManageCashierController {
         }
         userRepository.deleteById(id);
         return ResponseEntity.ok("Cashier deleted successfully.");
+    }
+
+    // Reset cashier password to default ('cashier')
+    @PutMapping("/{id}/reset")
+    public ResponseEntity<?> resetCashierPassword(@PathVariable Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty() || userOpt.get().getRole() != Role.CASHIER) {
+            return ResponseEntity.badRequest().body("Cashier not found.");
+        }
+        User cashier = userOpt.get();
+        cashier.setPassword(passwordEncoder.encode("cashier"));
+        userRepository.save(cashier);
+        return ResponseEntity.ok("Cashier password reset successfully.");
     }
 }
