@@ -22,34 +22,32 @@ public class ProfitLossService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    // Overall Profit Loss Report (for all sales)
     public ProfitLossDTO calculateProfitLoss() {
         List<Sale> sales = salesRepository.findAll();
-        List<Inventory> inventoryItems = inventoryRepository.findAll();
+
         double totalSaleValue = sales.stream()
                 .mapToDouble(sale -> sale.getSoldPrice() * sale.getQuantitySold())
                 .sum();
-        double totalInvestmentValue = sales.stream()
-                .mapToDouble(sale -> sale.getInventory().getOriginalPrice() * sale.getQuantitySold())
-                .sum();
 
-        double totalInventoryValue = inventoryItems.stream()
-                .mapToDouble(item -> item.getOriginalPrice() * item.getQuantity())
+        double totalInvestmentValue = sales.stream()
+                .mapToDouble(sale -> sale.getOriginalPrice() * sale.getQuantitySold())
                 .sum();
 
         double overallProfit = totalSaleValue - totalInvestmentValue;
 
         double profitOnly = sales.stream().mapToDouble(sale -> {
-            double diff = sale.getSoldPrice() - sale.getInventory().getOriginalPrice();
+            double diff = sale.getSoldPrice() - sale.getOriginalPrice();
             return diff > 0 ? diff * sale.getQuantitySold() : 0;
         }).sum();
 
         double lossOnly = sales.stream().mapToDouble(sale -> {
-            double diff = sale.getSoldPrice() - sale.getInventory().getOriginalPrice();
+            double diff = sale.getSoldPrice() - sale.getOriginalPrice();
             return diff < 0 ? -diff * sale.getQuantitySold() : 0;
         }).sum();
 
-        return new ProfitLossDTO(totalInvestmentValue, totalSaleValue, overallProfit, profitOnly, lossOnly, totalInventoryValue);
+        // totalInventoryValue from InventoryRepository remains unchanged (handled separately)
+        // For this report, we assume totalInvestmentValue comes only from sales.
+        return new ProfitLossDTO(totalInvestmentValue, totalSaleValue, overallProfit, profitOnly, lossOnly, 0);
     }
 
 //    // Monthly Profit Loss Report

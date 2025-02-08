@@ -20,13 +20,13 @@ public class InventoryController {
     @Autowired
     private SupplierTransactionRepository supplierTransactionRepository;
 
-    // Add a new inventory item and record a supplier transaction
+    // Add new inventory item and create a supplier transaction record (with original quantity)
     @PostMapping("/add")
     public Inventory addInventory(@RequestBody Inventory inventory) {
         if (inventory.getImportTimestamp() == null) {
             inventory.setImportTimestamp(LocalDateTime.now());
         }
-        // Create a supplier transaction record
+        // Create a supplier transaction record with original values
         SupplierTransaction st = new SupplierTransaction();
         st.setItemName(inventory.getItemName());
         st.setQuantity(inventory.getQuantity());
@@ -39,7 +39,7 @@ public class InventoryController {
         return inventoryRepository.save(inventory);
     }
 
-    // Return all inventory items that are in stock (quantity > 0)
+    // Get all in-stock inventory items (quantity > 0)
     @GetMapping("/all")
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findByQuantityGreaterThan(0);
@@ -54,11 +54,11 @@ public class InventoryController {
         existing.setOriginalPrice(inventory.getOriginalPrice());
         existing.setSupplierName(inventory.getSupplierName());
         existing.setGeneralFee(inventory.getGeneralFee());
-        // We do not update the importTimestamp
+        // Do not update importTimestamp
         return inventoryRepository.save(existing);
     }
 
-    // (Optional) Remove out-of-stock items (if needed)
+    // Optionally, remove out-of-stock items from the inventory (this does not affect supplier transaction records)
     @DeleteMapping("/remove-out-of-stock")
     public void removeOutOfStockItems() {
         List<Inventory> allItems = inventoryRepository.findAll();

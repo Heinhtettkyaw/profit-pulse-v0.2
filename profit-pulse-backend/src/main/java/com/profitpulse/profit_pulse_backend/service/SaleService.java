@@ -1,3 +1,4 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/service/SaleService.java
 package com.profitpulse.profit_pulse_backend.service;
 
 import com.profitpulse.profit_pulse_backend.dto.SaleDTO;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 public class SaleService {
+
     @Autowired
     private SalesRepository salesRepository;
 
@@ -31,15 +33,17 @@ public class SaleService {
         inventory.setQuantity(inventory.getQuantity() - saleDTO.getQuantitySold());
         inventoryRepository.save(inventory);
 
-        // Create sale record and set cashier username from the security context
+        // Create sale record and capture the original price from inventory at this moment
         Sale sale = new Sale();
         sale.setInventory(inventory);
         sale.setQuantitySold(saleDTO.getQuantitySold());
         sale.setSoldPrice(saleDTO.getSoldPrice());
         sale.setBuyerName(saleDTO.getBuyerName());
+        sale.setGeneralFee(saleDTO.getGeneralFee());
         sale.setTimestamp(LocalDateTime.now());
+        sale.setOriginalPrice(inventory.getOriginalPrice()); // Capture original price at sale time
 
-        // Extract the logged-in username (cashier)
+        // Set cashier username from security context
         String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         sale.setCashierUsername(cashierUsername);
 
@@ -50,5 +54,5 @@ public class SaleService {
         return salesRepository.findAll();
     }
 
-    // Existing methods (if any) remain unchanged...
+    // (Other methods remain unchanged)
 }

@@ -21,7 +21,11 @@ public class Sale {
     private int quantitySold;
     private double soldPrice;
     private String buyerName;
-    private double generalFee; // General fee for sale (e.g. worker fee or transportation fee)
+    private double generalFee;       // General fee for sale (worker/transport fee)
+
+    // New field: store the original price at the time of sale
+    private double originalPrice;
+
     private LocalDateTime timestamp;
     private String cashierUsername;
 }

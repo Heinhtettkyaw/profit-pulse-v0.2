@@ -56,6 +56,7 @@ const SalesRecorder = () => {
             <h3>Sales Recorder</h3>
             {message && <p>{message}</p>}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                {/* Left: Inventory Table */}
                 <div style={{ flex: 1, marginRight: '20px' }}>
                     <h4>Available Inventory</h4>
                     {inventory.length > 0 ? (
@@ -83,6 +84,7 @@ const SalesRecorder = () => {
                         <p>No inventory items available.</p>
                     )}
                 </div>
+                {/* Right: Record Sale Form */}
                 <div style={{ flex: 1 }}>
                     <h4>Record a Sale</h4>
                     <div style={{ marginBottom: '10px' }}>

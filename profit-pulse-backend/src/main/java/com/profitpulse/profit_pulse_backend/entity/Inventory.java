@@ -15,10 +15,10 @@ public class Inventory {
     private Long id;
 
     private String itemName;
-    private int quantity;
+    private int quantity;           // Current available quantity
     private double originalPrice;
     private String supplierName;
-    private double generalFee; // General fee for import (e.g. worker fee or transportation fee)
+    private double generalFee;      // General fee for import (e.g. worker or transportation fee)
 
     private LocalDateTime importTimestamp;
 }

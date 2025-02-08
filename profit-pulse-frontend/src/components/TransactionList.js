@@ -68,6 +68,7 @@ const TransactionList = () => {
                         <th>Item Name</th>
                         <th>Quantity Sold</th>
                         <th>Sold Price</th>
+                        <th>Original Price</th>
                         <th>Buyer Name</th>
                         <th>Cashier</th>
                         <th>Timestamp</th>
@@ -83,6 +84,7 @@ const TransactionList = () => {
                                 <td>{sale.inventory.itemName}</td>
                                 <td>{sale.quantitySold}</td>
                                 <td>{sale.soldPrice}</td>
+                                <td>{sale.originalPrice}</td>
                                 <td>{sale.buyerName}</td>
                                 <td>{sale.cashierUsername}</td>
                                 <td>{sale.timestamp ? new Date(sale.timestamp).toLocaleString() : ''}</td>

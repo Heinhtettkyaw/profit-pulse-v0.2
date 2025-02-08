@@ -16,6 +16,6 @@ public class PublicInventoryController {
     @GetMapping("/all")
     public List<Inventory> getAllItems() {
         // Returns all inventory items (read-only) for cashier view.
-        return inventoryRepository.findAll();
+        return inventoryRepository.findByQuantityGreaterThan(0);
     }
 }

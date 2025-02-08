@@ -15,9 +15,9 @@ public class SupplierTransaction {
     private Long id;
 
     private String itemName;
-    private int quantity;
+    private int quantity;            // Original imported quantity (unchanged)
     private double originalPrice;
     private String supplierName;
-    private double generalFee; // General fee for import
+    private double generalFee;       // Fee for import
     private LocalDateTime importTimestamp;
 }

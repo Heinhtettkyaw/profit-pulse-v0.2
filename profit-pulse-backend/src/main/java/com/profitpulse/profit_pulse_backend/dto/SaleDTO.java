@@ -9,4 +9,5 @@ public class SaleDTO {
     private int quantitySold;
     private double soldPrice;
     private String buyerName;
+    private double generalFee;
 }
