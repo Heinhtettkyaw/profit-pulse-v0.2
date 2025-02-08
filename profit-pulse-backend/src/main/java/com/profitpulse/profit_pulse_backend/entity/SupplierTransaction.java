@@ -1,4 +1,4 @@
-// src/main/java/com/profitpulse/profit_pulse_backend/entity/Inventory.java
+// src/main/java/com/profitpulse/profit_pulse_backend/entity/SupplierTransaction.java
 package com.profitpulse.profit_pulse_backend.entity;
 
 import jakarta.persistence.*;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-public class Inventory {
+public class SupplierTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +18,6 @@ public class Inventory {
     private int quantity;
     private double originalPrice;
     private String supplierName;
-    private double generalFee; // General fee for import (e.g. worker fee or transportation fee)
-
+    private double generalFee; // General fee for import
     private LocalDateTime importTimestamp;
 }

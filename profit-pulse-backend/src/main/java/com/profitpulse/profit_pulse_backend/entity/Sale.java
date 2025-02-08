@@ -1,28 +1,27 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/entity/Sale.java
 package com.profitpulse.profit_pulse_backend.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "inventory_id")
+    @JoinColumn(name = "inventory_id", nullable = false)
     private Inventory inventory;
 
     private int quantitySold;
-    private double soldPrice;      // Price per unit sold
-    private String buyerName;      // Buyer’s name
-    private LocalDateTime timestamp;  // Sale date and time
-
-    // New field: records which cashier recorded the sale
+    private double soldPrice;
+    private String buyerName;
+    private double generalFee; // General fee for sale (e.g. worker fee or transportation fee)
+    private LocalDateTime timestamp;
     private String cashierUsername;
 }

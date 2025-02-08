@@ -1,3 +1,4 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/controller/ManageCashierController.java
 package com.profitpulse.profit_pulse_backend.controller;
 
 import com.profitpulse.profit_pulse_backend.entity.Role;

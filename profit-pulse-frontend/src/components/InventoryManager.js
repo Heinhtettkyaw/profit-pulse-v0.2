@@ -4,7 +4,7 @@ import API from '../services/api';
 
 const InventoryManager = () => {
     const [inventory, setInventory] = useState([]);
-    const [newItem, setNewItem] = useState({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '' });
+    const [newItem, setNewItem] = useState({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '', generalFee: 0 });
     const [message, setMessage] = useState('');
     const [editItem, setEditItem] = useState(null);
 
@@ -18,6 +18,7 @@ const InventoryManager = () => {
             setInventory(response.data);
         } catch (error) {
             console.error('Error fetching inventory:', error);
+            setMessage('Error fetching inventory.');
         }
     };
 
@@ -25,7 +26,7 @@ const InventoryManager = () => {
         try {
             await API.post('/admin/inventory/add', newItem);
             setMessage('Item added successfully!');
-            setNewItem({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '' });
+            setNewItem({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '', generalFee: 0 });
             fetchInventory();
         } catch (error) {
             console.error('Error adding item:', error);
@@ -50,7 +51,6 @@ const InventoryManager = () => {
     };
 
     const handleDeleteItem = async (id) => {
-        // Show confirmation dialog before deletion
         if (!window.confirm('Are you sure you want to delete this item?')) {
             setMessage('Deletion cancelled.');
             return;
@@ -99,6 +99,13 @@ const InventoryManager = () => {
                     onChange={(e) => setNewItem({ ...newItem, supplierName: e.target.value })}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
+                <input
+                    type="number"
+                    placeholder="General Fee"
+                    value={newItem.generalFee}
+                    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}
+                    style={{ marginRight: '5px', padding: '5px' }}
+                />
                 <button onClick={handleAddItem} style={{ padding: '5px 10px' }}>
                     Add Item
                 </button>
@@ -135,6 +142,13 @@ const InventoryManager = () => {
                         onChange={(e) => setEditItem({ ...editItem, supplierName: e.target.value })}
                         style={{ marginRight: '5px', padding: '5px' }}
                     />
+                    <input
+                        type="number"
+                        placeholder="General Fee"
+                        value={editItem.generalFee}
+                        onChange={(e) => setEditItem({ ...editItem, generalFee: parseFloat(e.target.value) || 0 })}
+                        style={{ marginRight: '5px', padding: '5px' }}
+                    />
                     <button onClick={handleUpdateItem} style={{ padding: '5px 10px', marginRight: '5px' }}>
                         Update
                     </button>
@@ -153,6 +167,7 @@ const InventoryManager = () => {
                         <th>Quantity</th>
                         <th>Original Price</th>
                         <th>Supplier Name</th>
+                        <th>General Fee</th>
                         <th>Imported On</th>
                         <th>Actions</th>
                     </tr>
@@ -164,6 +179,7 @@ const InventoryManager = () => {
                             <td>{item.quantity}</td>
                             <td>{item.originalPrice}</td>
                             <td>{item.supplierName}</td>
+                            <td>{item.generalFee}</td>
                             <td>{item.importTimestamp ? new Date(item.importTimestamp).toLocaleString() : ''}</td>
                             <td>
                                 <button onClick={() => handleEditItem(item)} style={{ marginRight: '5px' }}>Edit</button>

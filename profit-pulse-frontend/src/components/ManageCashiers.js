@@ -7,6 +7,10 @@ const ManageCashiers = () => {
     const [newCashier, setNewCashier] = useState({ username: '', password: '' });
     const [message, setMessage] = useState('');
 
+    // For demo purposes only: hardcoded admin password.
+    // Replace with secure backend validation in production.
+    const ADMIN_PASSWORD = "admin123";
+
     const fetchCashiers = async () => {
         try {
             const response = await API.get('/admin/cashiers');
@@ -27,9 +31,9 @@ const ManageCashiers = () => {
             setMessage('Username and password are required.');
             return;
         }
-        const confirmation = window.prompt("Type 'add' to confirm adding the cashier.");
-        if (confirmation !== 'add') {
-            setMessage('Addition not confirmed.');
+        const adminPwd = window.prompt("Enter your admin password to confirm adding a cashier:");
+        if (adminPwd !== ADMIN_PASSWORD) {
+            setMessage('Password incorrect. Cashier not added.');
             return;
         }
         try {
@@ -44,9 +48,9 @@ const ManageCashiers = () => {
     };
 
     const handleDeleteCashier = async (id) => {
-        const confirmation = window.prompt("Type 'delete' to confirm deleting the cashier.");
-        if (confirmation !== 'delete') {
-            setMessage('Deletion not confirmed.');
+        const adminPwd = window.prompt("Enter your admin password to confirm deleting the cashier:");
+        if (adminPwd !== ADMIN_PASSWORD) {
+            setMessage('Password incorrect. Deletion cancelled.');
             return;
         }
         try {
@@ -60,9 +64,9 @@ const ManageCashiers = () => {
     };
 
     const handleResetPassword = async (id) => {
-        const confirmation = window.prompt("Type 'reset' to confirm resetting the cashier's password to default.");
-        if (confirmation !== 'reset') {
-            setMessage('Reset not confirmed.');
+        const adminPwd = window.prompt("Enter your admin password to confirm resetting the cashier's password to default:");
+        if (adminPwd !== ADMIN_PASSWORD) {
+            setMessage('Password incorrect. Reset cancelled.');
             return;
         }
         try {
