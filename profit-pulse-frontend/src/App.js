@@ -1,18 +1,18 @@
-// src/App.js
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import CashierDashboard from './components/CashierDashboard';
-import InventoryManager from './components/InventoryManager';
-import ProfitLossReport from './components/ProfitLossReport';
 import SalesRecorder from './components/SalesRecorder';
 import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
+import ProfitLossReport from './components/ProfitLossReport';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
+// import ProfitLossPage from './components/ProfitLossPage';
 import ManageCashiers from './components/ManageCashiers';
 import ChangePassword from './components/ChangePassword';
 import { AuthContext } from './context/AuthContext';
+import InventoryManager from "./components/InventoryManager";
 
 function App() {
   const { auth } = useContext(AuthContext);
@@ -33,9 +33,10 @@ function App() {
           <Route path="/admin/*" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
             <Route path="inventory" element={<InventoryManager />} />
             <Route path="profit-loss" element={<ProfitLossReport />} />
+            <Route path="combined-profit-loss" element={<CombinedProfitLossReport />} />
+            {/*<Route path="profit-loss-page" element={<ProfitLossPage />} />*/}
             <Route path="sales-transactions" element={<TransactionList />} />
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />
-            <Route path="monthly-report" element={<CombinedProfitLossReport />} />
             <Route path="manage-cashiers" element={<ManageCashiers />} />
             <Route index element={<InventoryManager />} />
           </Route>

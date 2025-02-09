@@ -14,17 +14,14 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "inventory_id", nullable = false)
-    private Inventory inventory;
+    // Captured fields from Inventory at sale time
+    private String itemName;         // Captured item name
+    private double originalPrice;    // Captured original price
 
     private int quantitySold;
     private double soldPrice;
     private String buyerName;
     private double generalFee;       // General fee for sale (worker/transport fee)
-
-    // New field: store the original price at the time of sale
-    private double originalPrice;
 
     private LocalDateTime timestamp;
     private String cashierUsername;

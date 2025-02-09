@@ -1,3 +1,4 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/repository/SalesRepository.java
 package com.profitpulse.profit_pulse_backend.repository;
 
 import com.profitpulse.profit_pulse_backend.entity.Sale;
@@ -7,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SalesRepository extends JpaRepository<Sale, Long> {
-    List<Sale> findByBuyerNameContainingIgnoreCase(String buyer);
-    List<Sale> findByBuyerNameContainingIgnoreCaseOrInventoryItemNameContainingIgnoreCase(String buyer, String itemName);
+    List<Sale> findByBuyerNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(String buyer, String itemName);
 }

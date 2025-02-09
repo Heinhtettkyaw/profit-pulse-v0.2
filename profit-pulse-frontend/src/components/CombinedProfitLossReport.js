@@ -11,18 +11,16 @@ const CombinedProfitLossReport = () => {
     const [barData, setBarData] = useState([]);
     const [message, setMessage] = useState('');
 
-    // Fetch all sales transactions if no filter is applied
     const fetchAllSales = async () => {
         try {
             const response = await API.get('/admin/report/sales');
             const allSales = response.data;
-            // Split sales into profit and loss
             const profits = allSales.filter(sale => {
-                const profit = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
+                const profit = (sale.soldPrice - sale.originalPrice) * sale.quantitySold;
                 return profit > 0;
             });
             const losses = allSales.filter(sale => {
-                const profit = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
+                const profit = (sale.soldPrice - sale.originalPrice) * sale.quantitySold;
                 return profit < 0;
             });
             setProfitTransactions(profits);
@@ -34,7 +32,6 @@ const CombinedProfitLossReport = () => {
         }
     };
 
-    // Fetch monthly sales transactions filtered by year and month
     const fetchMonthlySales = async () => {
         if (year.trim() === '' || month.trim() === '') {
             setMessage('Please enter both year and month for filtering.');
@@ -56,12 +53,10 @@ const CombinedProfitLossReport = () => {
         }
     };
 
-    // Fetch aggregated monthly profit data for bar chart
     const fetchBarChartData = async () => {
         try {
             const response = await API.get('/admin/profit-loss/monthly/bar');
             const data = response.data;
-            // Get current month and previous two months
             const currentDate = new Date();
             const months = [];
             for (let i = 0; i < 3; i++) {
@@ -77,7 +72,6 @@ const CombinedProfitLossReport = () => {
         }
     };
 
-    // On mount, fetch all sales and bar chart data
     useEffect(() => {
         fetchAllSales();
         fetchBarChartData();
@@ -85,7 +79,7 @@ const CombinedProfitLossReport = () => {
 
     return (
         <div>
-            <h3>Profit & Loss Details Report</h3>
+            <h3>Profit &amp; Loss Details Report</h3>
             <div>
                 <input
                     type="number"
@@ -128,11 +122,11 @@ const CombinedProfitLossReport = () => {
                             </thead>
                             <tbody>
                             {profitTransactions.map((sale) => {
-                                const profit = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
+                                const profit = (sale.soldPrice - sale.originalPrice) * sale.quantitySold;
                                 return (
                                     <tr key={sale.id}>
                                         <td>{sale.id}</td>
-                                        <td>{sale.inventory.itemName}</td>
+                                        <td>{sale.itemName}</td>
                                         <td>{sale.quantitySold}</td>
                                         <td>{sale.soldPrice}</td>
                                         <td>{sale.buyerName}</td>
@@ -166,11 +160,11 @@ const CombinedProfitLossReport = () => {
                             </thead>
                             <tbody>
                             {lossTransactions.map((sale) => {
-                                const loss = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
+                                const loss = (sale.soldPrice - sale.originalPrice) * sale.quantitySold;
                                 return (
                                     <tr key={sale.id}>
                                         <td>{sale.id}</td>
-                                        <td>{sale.inventory.itemName}</td>
+                                        <td>{sale.itemName}</td>
                                         <td>{sale.quantitySold}</td>
                                         <td>{sale.soldPrice}</td>
                                         <td>{sale.buyerName}</td>

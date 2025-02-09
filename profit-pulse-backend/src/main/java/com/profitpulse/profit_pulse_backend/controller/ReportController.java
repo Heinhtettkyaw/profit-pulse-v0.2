@@ -1,9 +1,10 @@
+// src/main/java/com/profitpulse/profit_pulse_backend/controller/ReportController.java
 package com.profitpulse.profit_pulse_backend.controller;
 
-import com.profitpulse.profit_pulse_backend.entity.Inventory;
 import com.profitpulse.profit_pulse_backend.entity.Sale;
-import com.profitpulse.profit_pulse_backend.repository.InventoryRepository;
+import com.profitpulse.profit_pulse_backend.entity.SupplierTransaction;
 import com.profitpulse.profit_pulse_backend.repository.SalesRepository;
+import com.profitpulse.profit_pulse_backend.repository.SupplierTransactionRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,32 +14,32 @@ import org.springframework.web.bind.annotation.*;
 public class ReportController {
 
     @Autowired
-    private InventoryRepository inventoryRepository;
-
-    @Autowired
     private SalesRepository salesRepository;
 
-    // Return all sales transactions (buyer transactions)
+    @Autowired
+    private SupplierTransactionRepository supplierTransactionRepository;
+
+    // Get all sale transactions
     @GetMapping("/sales")
     public List<Sale> getAllSalesTransactions() {
         return salesRepository.findAll();
     }
 
-    // Search sales by buyer name
+    // Search sale transactions by buyer or item name
     @GetMapping("/sales/search")
     public List<Sale> searchSales(@RequestParam("query") String query) {
-        return salesRepository.findByBuyerNameContainingIgnoreCaseOrInventoryItemNameContainingIgnoreCase(query, query);
+        return salesRepository.findByBuyerNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(query, query);
     }
 
-    // Return all supplier transactions (all inventory imports)
-    @GetMapping("/suppliers")
-    public List<Inventory> getAllSupplierTransactions() {
-        return inventoryRepository.findAll();
-    }
+//    // Get all supplier transactions
+//    @GetMapping("/suppliers")
+//    public List<SupplierTransaction> getAllSupplierTransactions() {
+//        return supplierTransactionRepository.findAll();
+//    }
 
-    // Search inventory imports by supplier name
+    // Search supplier transactions by supplier or item name
     @GetMapping("/inventory/search")
-    public List<Inventory> searchInventory(@RequestParam("query") String query) {
-        return inventoryRepository.findBySupplierNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(query, query);
+    public List<SupplierTransaction> searchSupplierTransactions(@RequestParam("query") String query) {
+        return supplierTransactionRepository.findBySupplierNameContainingIgnoreCaseOrItemNameContainingIgnoreCase(query, query);
     }
 }

@@ -7,7 +7,6 @@ const SupplierTransactionList = () => {
     const [query, setQuery] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch all supplier transactions
     const fetchAllTransactions = async () => {
         try {
             const response = await API.get('/admin/report/suppliers');
@@ -19,7 +18,6 @@ const SupplierTransactionList = () => {
         }
     };
 
-    // Search inventory imports by supplier or item name
     const searchTransactions = async () => {
         try {
             if (query.trim() === '') {
@@ -43,7 +41,7 @@ const SupplierTransactionList = () => {
 
     return (
         <div>
-            <h3>Supplier Transactions (Inventory Imports)</h3>
+            <h3>Supplier Transactions</h3>
             <div>
                 <input
                     type="text"
@@ -69,6 +67,7 @@ const SupplierTransactionList = () => {
                         <th>Quantity</th>
                         <th>Original Price</th>
                         <th>Supplier Name</th>
+                        <th>General Fee</th>
                         <th>Imported On</th>
                     </tr>
                     </thead>
@@ -80,6 +79,7 @@ const SupplierTransactionList = () => {
                             <td>{item.quantity}</td>
                             <td>{item.originalPrice}</td>
                             <td>{item.supplierName}</td>
+                            <td>{item.generalFee}</td>
                             <td>{item.importTimestamp ? new Date(item.importTimestamp).toLocaleString() : ''}</td>
                         </tr>
                     ))}

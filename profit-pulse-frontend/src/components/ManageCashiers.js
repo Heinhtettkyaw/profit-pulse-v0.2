@@ -1,21 +1,19 @@
-// src/components/ManageCashiers.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
+import PasswordPrompt from './PasswordPrompt';
 
 const ManageCashiers = () => {
     const [cashiers, setCashiers] = useState([]);
     const [newCashier, setNewCashier] = useState({ username: '', password: '' });
     const [message, setMessage] = useState('');
-
-    // For demo purposes only: hardcoded admin password.
-    // Replace with secure backend validation in production.
-    const ADMIN_PASSWORD = "admin123";
+    const [showPrompt, setShowPrompt] = useState(false);
+    const [promptMessage, setPromptMessage] = useState('');
+    const [pendingAction, setPendingAction] = useState(null);
 
     const fetchCashiers = async () => {
         try {
             const response = await API.get('/admin/cashiers');
             setCashiers(response.data);
-            setMessage('');
         } catch (error) {
             console.error('Error fetching cashiers:', error);
             setMessage('Error fetching cashiers.');
@@ -26,63 +24,72 @@ const ManageCashiers = () => {
         fetchCashiers();
     }, []);
 
-    const handleAddCashier = async () => {
+    const executeAction = async (action, adminPwd) => {
+        try {
+            await action(adminPwd);
+            setMessage('Operation successful.');
+            fetchCashiers();
+        } catch (error) {
+            console.error('Error executing action:', error);
+            setMessage('Operation failed: ' + (error.response?.data || ''));
+        }
+    };
+
+    const handleAddCashier = () => {
         if (!newCashier.username || !newCashier.password) {
             setMessage('Username and password are required.');
             return;
         }
-        const adminPwd = window.prompt("Enter your admin password to confirm adding a cashier:");
-        if (adminPwd !== ADMIN_PASSWORD) {
-            setMessage('Password incorrect. Cashier not added.');
-            return;
-        }
-        try {
-            const response = await API.post('/admin/cashiers', newCashier);
+        setPromptMessage("Enter your admin password to add cashier:");
+        setPendingAction(() => async (adminPwd) => {
+            await API.post('/admin/cashiers?adminPassword=' + encodeURIComponent(adminPwd), newCashier);
             setMessage('Cashier added successfully!');
             setNewCashier({ username: '', password: '' });
-            fetchCashiers();
-        } catch (error) {
-            console.error('Error adding cashier:', error);
-            setMessage('Error adding cashier.');
-        }
+        });
+        setShowPrompt(true);
     };
 
-    const handleDeleteCashier = async (id) => {
-        const adminPwd = window.prompt("Enter your admin password to confirm deleting the cashier:");
-        if (adminPwd !== ADMIN_PASSWORD) {
-            setMessage('Password incorrect. Deletion cancelled.');
-            return;
-        }
-        try {
-            await API.delete(`/admin/cashiers/${id}`);
+    const handleDeleteCashier = (id) => {
+        setPromptMessage("Enter your admin password to delete cashier:");
+        setPendingAction(() => async (adminPwd) => {
+            await API.delete(`/admin/cashiers/${id}?adminPassword=${encodeURIComponent(adminPwd)}`);
             setMessage('Cashier deleted successfully!');
-            fetchCashiers();
-        } catch (error) {
-            console.error('Error deleting cashier:', error);
-            setMessage('Error deleting cashier.');
+        });
+        setShowPrompt(true);
+    };
+
+    const handleResetPassword = (id) => {
+        setPromptMessage("Enter your admin password to reset cashier password:");
+        setPendingAction(() => async (adminPwd) => {
+            await API.put(`/admin/cashiers/${id}/reset?adminPassword=${encodeURIComponent(adminPwd)}`);
+            setMessage('Cashier password reset successfully!');
+        });
+        setShowPrompt(true);
+    };
+
+    const handlePromptSubmit = async (adminPwd) => {
+        setShowPrompt(false);
+        if (pendingAction) {
+            await executeAction(pendingAction, adminPwd);
         }
     };
 
-    const handleResetPassword = async (id) => {
-        const adminPwd = window.prompt("Enter your admin password to confirm resetting the cashier's password to default:");
-        if (adminPwd !== ADMIN_PASSWORD) {
-            setMessage('Password incorrect. Reset cancelled.');
-            return;
-        }
-        try {
-            await API.put(`/admin/cashiers/${id}/reset`);
-            setMessage('Cashier password reset successfully!');
-            fetchCashiers();
-        } catch (error) {
-            console.error('Error resetting cashier password:', error);
-            setMessage('Error resetting cashier password.');
-        }
+    const handlePromptCancel = () => {
+        setShowPrompt(false);
+        setMessage("Operation cancelled.");
     };
 
     return (
         <div>
             <h3>Manage Cashiers</h3>
             {message && <p>{message}</p>}
+            {showPrompt && (
+                <PasswordPrompt
+                    promptMessage={promptMessage}
+                    onSubmit={handlePromptSubmit}
+                    onCancel={handlePromptCancel}
+                />
+            )}
             <div style={{ marginBottom: '20px' }}>
                 <h4>Add New Cashier</h4>
                 <input

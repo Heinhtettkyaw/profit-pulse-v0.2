@@ -4,11 +4,14 @@ package com.profitpulse.profit_pulse_backend.service;
 import com.profitpulse.profit_pulse_backend.dto.SaleDTO;
 import com.profitpulse.profit_pulse_backend.entity.Inventory;
 import com.profitpulse.profit_pulse_backend.entity.Sale;
+import com.profitpulse.profit_pulse_backend.entity.SupplierTransaction;
 import com.profitpulse.profit_pulse_backend.repository.InventoryRepository;
 import com.profitpulse.profit_pulse_backend.repository.SalesRepository;
+import com.profitpulse.profit_pulse_backend.repository.SupplierTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +24,12 @@ public class SaleService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
+    @Autowired
+    private SupplierTransactionRepository supplierTransactionRepository;
+
+    @Transactional
     public Sale recordSale(SaleDTO saleDTO) {
+        // Retrieve the Inventory record.
         Inventory inventory = inventoryRepository.findById(saleDTO.getInventoryId())
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
@@ -29,30 +37,37 @@ public class SaleService {
             throw new RuntimeException("Insufficient stock");
         }
 
-        // Deduct sold quantity from inventory
-        inventory.setQuantity(inventory.getQuantity() - saleDTO.getQuantitySold());
+        // Deduct sold quantity.
+        int newQuantity = inventory.getQuantity() - saleDTO.getQuantitySold();
+        inventory.setQuantity(newQuantity);
         inventoryRepository.save(inventory);
 
-        // Create sale record and capture the original price from inventory at this moment
+        // Retrieve the supplier transaction record from Inventory.
+        SupplierTransaction st = inventory.getSupplierTransaction();
+
+        // Create a new Sale record capturing item details at sale time.
         Sale sale = new Sale();
-        sale.setInventory(inventory);
+        sale.setItemName(inventory.getItemName());
+        sale.setOriginalPrice(inventory.getOriginalPrice());
         sale.setQuantitySold(saleDTO.getQuantitySold());
         sale.setSoldPrice(saleDTO.getSoldPrice());
         sale.setBuyerName(saleDTO.getBuyerName());
         sale.setGeneralFee(saleDTO.getGeneralFee());
         sale.setTimestamp(LocalDateTime.now());
-        sale.setOriginalPrice(inventory.getOriginalPrice()); // Capture original price at sale time
-
-        // Set cashier username from security context
         String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         sale.setCashierUsername(cashierUsername);
+        // Optionally, you can store st reference if needed. (Not used for profit/loss calculations.)
+        sale = salesRepository.save(sale);
 
-        return salesRepository.save(sale);
+        // If inventory is now sold out, delete the Inventory record.
+        if (newQuantity == 0) {
+            inventoryRepository.delete(inventory);
+        }
+
+        return sale;
     }
 
     public List<Sale> getAllSales() {
         return salesRepository.findAll();
     }
-
-    // (Other methods remain unchanged)
 }

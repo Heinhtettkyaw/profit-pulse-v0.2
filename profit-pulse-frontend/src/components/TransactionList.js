@@ -7,7 +7,6 @@ const TransactionList = () => {
     const [query, setQuery] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch all sales transactions
     const fetchAllTransactions = async () => {
         try {
             const response = await API.get('/admin/report/sales');
@@ -19,7 +18,6 @@ const TransactionList = () => {
         }
     };
 
-    // Search transactions by buyer or item name
     const searchTransactions = async () => {
         try {
             if (query.trim() === '') {
@@ -43,7 +41,7 @@ const TransactionList = () => {
 
     return (
         <div>
-            <h3>Sales Transactions (Buyer Transactions)</h3>
+            <h3>Sales Transactions</h3>
             <div>
                 <input
                     type="text"
@@ -68,7 +66,6 @@ const TransactionList = () => {
                         <th>Item Name</th>
                         <th>Quantity Sold</th>
                         <th>Sold Price</th>
-                        <th>Original Price</th>
                         <th>Buyer Name</th>
                         <th>Cashier</th>
                         <th>Timestamp</th>
@@ -77,14 +74,13 @@ const TransactionList = () => {
                     </thead>
                     <tbody>
                     {transactions.map((sale) => {
-                        const profit = (sale.soldPrice - sale.inventory.originalPrice) * sale.quantitySold;
+                        const profit = (sale.soldPrice - sale.originalPrice) * sale.quantitySold;
                         return (
                             <tr key={sale.id}>
                                 <td>{sale.id}</td>
-                                <td>{sale.inventory.itemName}</td>
+                                <td>{sale.itemName}</td>
                                 <td>{sale.quantitySold}</td>
                                 <td>{sale.soldPrice}</td>
-                                <td>{sale.originalPrice}</td>
                                 <td>{sale.buyerName}</td>
                                 <td>{sale.cashierUsername}</td>
                                 <td>{sale.timestamp ? new Date(sale.timestamp).toLocaleString() : ''}</td>

@@ -8,7 +8,6 @@ const ProfitLossReport = () => {
     const [month, setMonth] = useState('');
     const [message, setMessage] = useState('');
 
-    // Fetch overall profit/loss report
     const fetchOverallReport = async () => {
         try {
             const response = await API.get('/admin/profit-loss');
@@ -20,7 +19,6 @@ const ProfitLossReport = () => {
         }
     };
 
-    // Fetch monthly profit/loss report
     const fetchMonthlyReport = async () => {
         if (year.trim() === '' || month.trim() === '') {
             setMessage('Please enter both year and month.');
@@ -39,13 +37,12 @@ const ProfitLossReport = () => {
     };
 
     useEffect(() => {
-        // Load overall report by default
         fetchOverallReport();
     }, []);
 
     return (
         <div>
-            <h3>Overall Profit & Loss Report</h3>
+            <h3>Overall Profit &amp; Loss Report</h3>
             <div>
                 <input
                     type="number"
@@ -74,24 +71,22 @@ const ProfitLossReport = () => {
                     <table border="1" cellPadding="5">
                         <thead>
                         <tr>
-                            <th>Current Total Inventory Value</th>
-                            <th>Total Original Price(for sold products)</th>
+                            <th>Total Investment Value</th>
                             <th>Total Sale Value</th>
+                            <th>Overall Profit</th>
                             <th>Total Profit (Profitable Sales)</th>
                             <th>Total Loss (Loss-making Sales)</th>
-                            <th>Overall Profit</th>
-
+                            <th>Total Inventory Value</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{report.totalInventoryValue}</td>
                             <td>{report.totalInvestmentValue}</td>
                             <td>{report.totalSaleValue}</td>
+                            <td>{report.overallProfit}</td>
                             <td>{report.profitOnly}</td>
                             <td>{report.lossOnly}</td>
-                            <td>{report.overallProfit}</td>
-
+                            <td>{report.totalInventoryValue}</td>
                         </tr>
                         </tbody>
                     </table>

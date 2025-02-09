@@ -16,30 +16,16 @@ const AdminDashboard = () => {
         <div style={{ padding: '20px' }}>
             <h2>Admin Dashboard</h2>
             <nav>
-                <ul style={{listStyleType: 'none', padding: 0}}>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="inventory">Inventory Manager</Link>
-                    </li>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="profit-loss">Overall Profit & Loss Report</Link>
-                    </li>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="sales-transactions">Sales Transactions</Link>
-                    </li>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="supplier-transactions">Supplier Transactions</Link>
-                    </li>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="monthly-report"> Profit/Loss Details Report</Link>
-                    </li>
-                    <li style={{marginBottom: '5px'}}>
-                        <Link to="manage-cashiers">Manage Cashiers</Link>
-                    </li>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <li><Link to="inventory">Manage Inventory</Link></li>
+                    <li><Link to="profit-loss">Profit &amp; Loss Reports</Link></li>
+                    <li><Link to="sales-transactions">Sales Transactions</Link></li>
+                    <li><Link to="supplier-transactions">Supplier Transactions</Link></li>
+                    <li><Link to="combined-profit-loss">Profit Loss Details</Link></li>
+                    <li><Link to="manage-cashiers">Manage Cashiers</Link></li>
                 </ul>
             </nav>
-            <button onClick={handleLogout} style={{marginTop: '10px'}}>
-                Logout
-            </button>
+            <button onClick={handleLogout} style={{ marginTop: '10px' }}>Logout</button>
             <hr />
             <Outlet />
         </div>

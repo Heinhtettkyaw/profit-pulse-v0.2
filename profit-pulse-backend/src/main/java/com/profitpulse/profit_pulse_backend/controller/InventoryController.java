@@ -20,13 +20,14 @@ public class InventoryController {
     @Autowired
     private SupplierTransactionRepository supplierTransactionRepository;
 
-    // Add new inventory item and create a supplier transaction record (with original quantity)
+    // Add a new inventory item and create a supplier transaction record.
     @PostMapping("/add")
     public Inventory addInventory(@RequestBody Inventory inventory) {
         if (inventory.getImportTimestamp() == null) {
             inventory.setImportTimestamp(LocalDateTime.now());
         }
-        // Create a supplier transaction record with original values
+
+        // Create a supplier transaction record with original import details.
         SupplierTransaction st = new SupplierTransaction();
         st.setItemName(inventory.getItemName());
         st.setQuantity(inventory.getQuantity());
@@ -36,36 +37,28 @@ public class InventoryController {
         st.setImportTimestamp(inventory.getImportTimestamp());
         supplierTransactionRepository.save(st);
 
+        // Link the inventory record to its supplier transaction.
+        inventory.setSupplierTransaction(st);
+
         return inventoryRepository.save(inventory);
     }
 
-    // Get all in-stock inventory items (quantity > 0)
+    // Return all live inventory items (quantity > 0)
     @GetMapping("/all")
     public List<Inventory> getAllInventory() {
         return inventoryRepository.findByQuantityGreaterThan(0);
     }
 
-    // Update an existing inventory item
+    // Update an existing inventory item.
     @PutMapping("/update/{id}")
     public Inventory updateInventory(@PathVariable Long id, @RequestBody Inventory inventory) {
-        Inventory existing = inventoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+        Inventory existing = inventoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Item not found"));
         existing.setItemName(inventory.getItemName());
         existing.setQuantity(inventory.getQuantity());
         existing.setOriginalPrice(inventory.getOriginalPrice());
         existing.setSupplierName(inventory.getSupplierName());
         existing.setGeneralFee(inventory.getGeneralFee());
-        // Do not update importTimestamp
         return inventoryRepository.save(existing);
-    }
-
-    // Optionally, remove out-of-stock items from the inventory (this does not affect supplier transaction records)
-    @DeleteMapping("/remove-out-of-stock")
-    public void removeOutOfStockItems() {
-        List<Inventory> allItems = inventoryRepository.findAll();
-        for (Inventory item : allItems) {
-            if (item.getQuantity() == 0) {
-                inventoryRepository.delete(item);
-            }
-        }
     }
 }

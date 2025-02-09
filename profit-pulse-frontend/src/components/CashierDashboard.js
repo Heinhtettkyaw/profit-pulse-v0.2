@@ -16,21 +16,12 @@ const CashierDashboard = () => {
         <div style={{ padding: '20px' }}>
             <h2>Cashier Dashboard</h2>
             <nav>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li style={{ marginBottom: '5px' }}>
-                        <Link to="sales">Sales Recorder</Link>
-                    </li>
-                    <li style={{ marginBottom: '5px' }}>
-                        <Link to="inventory">Inventory List</Link>
-                    </li>
-                    <li style={{ marginBottom: '5px' }}>
-                        <Link to="change-password">Change Password</Link>
-                    </li>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                    <li><Link to="sales">Sales Recorder</Link></li>
+                    <li><Link to="change-password">Change Password</Link></li>
                 </ul>
             </nav>
-            <button onClick={handleLogout} style={{ marginTop: '10px' }}>
-                Logout
-            </button>
+            <button onClick={handleLogout} style={{ marginTop: '10px' }}>Logout</button>
             <hr />
             <Outlet />
         </div>

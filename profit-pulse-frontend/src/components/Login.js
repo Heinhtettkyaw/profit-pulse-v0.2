@@ -1,3 +1,4 @@
+// src/components/Login.js
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
@@ -9,8 +10,9 @@ const Login = () => {
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [error, setError] = useState('');
 
-    const handleChange = (e) =>
+    const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -33,28 +35,24 @@ const Login = () => {
             <h2>Login</h2>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '10px' }}>
-                    <input
-                        type="text"
-                        name="username"
-                        placeholder="Username"
-                        value={credentials.username}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '8px' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={credentials.password}
-                        onChange={handleChange}
-                        required
-                        style={{ width: '100%', padding: '8px' }}
-                    />
-                </div>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+                    required
+                />
                 <button type="submit" style={{ width: '100%', padding: '8px' }}>
                     Login
                 </button>

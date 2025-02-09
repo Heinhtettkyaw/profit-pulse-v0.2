@@ -8,10 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfitLossDTO {
-    private double totalInvestmentValue; // Sum over sales: (originalPrice × quantitySold)
-    private double totalSaleValue;         // Sum over sales: (soldPrice × quantitySold)
-    private double overallProfit;          // totalSaleValue - totalInvestmentValue
-    private double profitOnly;             // Sum of profits for profitable sales
-    private double lossOnly;               // Sum of losses (as a positive number) for loss-making sales
-    private double totalInventoryValue;    // Value of all unsold inventory: ∑(originalPrice × quantity available)
+    private double totalInvestmentValue;
+    private double totalSaleValue;
+    private double overallProfit;
+    private double profitOnly;
+    private double lossOnly;
+    private double totalInventoryValue;
 }
