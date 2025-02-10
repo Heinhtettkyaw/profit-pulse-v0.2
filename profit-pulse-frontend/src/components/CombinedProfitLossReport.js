@@ -1,7 +1,7 @@
 // src/components/CombinedProfitLossReport.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { BarChart,Cell, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const CombinedProfitLossReport = () => {
     const [year, setYear] = useState('');
@@ -239,7 +239,11 @@ const CombinedProfitLossReport = () => {
                             <YAxis/>
                             <Tooltip/>
                             <Legend/>
-                            <Bar dataKey="profit" fill="#82ca9d"/>
+                            <Bar dataKey="profit">
+                                {monthlyBarData.map((entry, index) => (
+                                    <Cell key={`cell-month-${index}`} fill={entry.profit < 0 ? 'red' : 'blue'}/>
+                                ))}
+                            </Bar>
                         </BarChart>
                     ) : (
                         <p>No monthly bar chart data available.</p>
@@ -254,7 +258,11 @@ const CombinedProfitLossReport = () => {
                             <YAxis/>
                             <Tooltip/>
                             <Legend/>
-                            <Bar dataKey="profit" fill="#8884d8"/>
+                            <Bar dataKey="profit">
+                                {dailyBarData.map((entry, index) => (
+                                    <Cell key={`cell-daily-${index}`} fill={entry.profit < 0 ? 'red' : 'blue'}/>
+                                ))}
+                            </Bar>
                         </BarChart>
                     ) : (
                         <p>No daily bar chart data available.</p>
