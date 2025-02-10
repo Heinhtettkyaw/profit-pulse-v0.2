@@ -44,20 +44,35 @@ public class SaleService {
 
         // Retrieve the supplier transaction record from Inventory.
         SupplierTransaction st = inventory.getSupplierTransaction();
+        // Compute the sale fee as 5% of the provided sold price.
+        double saleFee = saleDTO.getSoldPrice() * 0.05;
+        // Adjust the sold price by adding the fee.
+        double adjustedSoldPrice = saleDTO.getSoldPrice() + saleFee;
 
         // Create a new Sale record capturing item details at sale time.
         Sale sale = new Sale();
         sale.setItemName(inventory.getItemName());
-        sale.setOriginalPrice(inventory.getOriginalPrice());
+        sale.setOriginalPrice(inventory.getOriginalPrice()); // This is the adjusted price from inventory.
         sale.setQuantitySold(saleDTO.getQuantitySold());
-        sale.setSoldPrice(saleDTO.getSoldPrice());
+        sale.setSoldPrice(adjustedSoldPrice);
         sale.setBuyerName(saleDTO.getBuyerName());
-        sale.setGeneralFee(saleDTO.getGeneralFee());
+        sale.setGeneralFee(saleFee);
         sale.setTimestamp(LocalDateTime.now());
         String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         sale.setCashierUsername(cashierUsername);
-        // Optionally, you can store st reference if needed. (Not used for profit/loss calculations.)
         sale = salesRepository.save(sale);
+//        Sale sale = new Sale();
+//        sale.setItemName(inventory.getItemName());
+//        sale.setOriginalPrice(inventory.getOriginalPrice());
+//        sale.setQuantitySold(saleDTO.getQuantitySold());
+//        sale.setSoldPrice(saleDTO.getSoldPrice());
+//        sale.setBuyerName(saleDTO.getBuyerName());
+//        sale.setGeneralFee(saleDTO.getGeneralFee());
+//        sale.setTimestamp(LocalDateTime.now());
+//        String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+//        sale.setCashierUsername(cashierUsername);
+//        // Optionally, you can store st reference if needed. (Not used for profit/loss calculations.)
+//        sale = salesRepository.save(sale);
 
         // If inventory is now sold out, delete the Inventory record.
         if (newQuantity == 0) {

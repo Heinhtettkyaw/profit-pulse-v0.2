@@ -1,5 +1,6 @@
 package com.profitpulse.profit_pulse_backend.controller;
 
+import com.profitpulse.profit_pulse_backend.dto.DailyProfitData;
 import com.profitpulse.profit_pulse_backend.dto.ProfitLossDTO;
 import com.profitpulse.profit_pulse_backend.dto.MonthlyProfitData;
 import com.profitpulse.profit_pulse_backend.service.ProfitLossService;
@@ -39,6 +40,13 @@ public class ProfitLossController {
     public List<MonthlyProfitData> getMonthlyBarChartData() {
         return profitLossService.getMonthlyProfitData();
     }
+
+    // Aggregated daily profit data for bar chart (last 5 days)
+    @GetMapping("/daily/bar")
+    public List<DailyProfitData> getDailyBarChartData() {
+        return profitLossService.getDailyProfitData();
+    }
+}
     // Monthly report: expects "year" and "month" query parameters
 //    @GetMapping("/monthly")
 //    public ResponseEntity<ProfitLossDTO> getMonthlyProfitLoss(@RequestParam("year") int year, @RequestParam("month") int month) {
@@ -50,4 +58,4 @@ public class ProfitLossController {
 //        List<MonthlyProfitData> data = profitLossService.getMonthlyProfitData();
 //        return ResponseEntity.ok(data);
 //    }
-}
+

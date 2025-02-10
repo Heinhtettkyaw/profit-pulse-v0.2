@@ -20,28 +20,56 @@ public class InventoryController {
     @Autowired
     private SupplierTransactionRepository supplierTransactionRepository;
 
-    // Add a new inventory item and create a supplier transaction record.
-    @PostMapping("/add")
-    public Inventory addInventory(@RequestBody Inventory inventory) {
-        if (inventory.getImportTimestamp() == null) {
-            inventory.setImportTimestamp(LocalDateTime.now());
-        }
-
-        // Create a supplier transaction record with original import details.
-        SupplierTransaction st = new SupplierTransaction();
-        st.setItemName(inventory.getItemName());
-        st.setQuantity(inventory.getQuantity());
-        st.setOriginalPrice(inventory.getOriginalPrice());
-        st.setSupplierName(inventory.getSupplierName());
-        st.setGeneralFee(inventory.getGeneralFee());
-        st.setImportTimestamp(inventory.getImportTimestamp());
-        supplierTransactionRepository.save(st);
-
-        // Link the inventory record to its supplier transaction.
-        inventory.setSupplierTransaction(st);
-
-        return inventoryRepository.save(inventory);
+//    // Add a new inventory item and create a supplier transaction record.
+//    @PostMapping("/add")
+//    public Inventory addInventory(@RequestBody Inventory inventory) {
+//        if (inventory.getImportTimestamp() == null) {
+//            inventory.setImportTimestamp(LocalDateTime.now());
+//        }
+//
+//        // Create a supplier transaction record with original import details.
+//        SupplierTransaction st = new SupplierTransaction();
+//        st.setItemName(inventory.getItemName());
+//        st.setQuantity(inventory.getQuantity());
+//        st.setOriginalPrice(inventory.getOriginalPrice());
+//        st.setSupplierName(inventory.getSupplierName());
+//        st.setGeneralFee(inventory.getGeneralFee());
+//        st.setImportTimestamp(inventory.getImportTimestamp());
+//        supplierTransactionRepository.save(st);
+//
+//        // Link the inventory record to its supplier transaction.
+//        inventory.setSupplierTransaction(st);
+//
+//        return inventoryRepository.save(inventory);
+//    }
+@PostMapping("/add")
+public Inventory addInventory(@RequestBody Inventory inventory) {
+    if (inventory.getImportTimestamp() == null) {
+        inventory.setImportTimestamp(LocalDateTime.now());
     }
+
+    // Compute the general fee as 5% of the entered original price.
+    double fee = inventory.getOriginalPrice() * 0.05;
+    // Set the computed fee.
+    inventory.setGeneralFee(fee);
+    // Update the original price to include the fee.
+    inventory.setOriginalPrice(inventory.getOriginalPrice() + fee);
+
+    // Create a supplier transaction record with the computed values.
+    SupplierTransaction st = new SupplierTransaction();
+    st.setItemName(inventory.getItemName());
+    st.setQuantity(inventory.getQuantity());
+    st.setOriginalPrice(inventory.getOriginalPrice()); // This is now the updated price (original + fee)
+    st.setSupplierName(inventory.getSupplierName());
+    st.setGeneralFee(inventory.getGeneralFee());
+    st.setImportTimestamp(inventory.getImportTimestamp());
+    supplierTransactionRepository.save(st);
+
+    // Link the inventory record to its supplier transaction.
+    inventory.setSupplierTransaction(st);
+
+    return inventoryRepository.save(inventory);
+}
 
     // Return all live inventory items (quantity > 0)
     @GetMapping("/all")

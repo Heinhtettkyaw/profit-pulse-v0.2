@@ -8,6 +8,8 @@ const CombinedProfitLossReport = () => {
     const [month, setMonth] = useState('');
     const [profitTransactions, setProfitTransactions] = useState([]);
     const [lossTransactions, setLossTransactions] = useState([]);
+    const [monthlyBarData, setMonthlyBarData] = useState([]);
+    const [dailyBarData, setDailyBarData] = useState([]);
     const [barData, setBarData] = useState([]);
     const [message, setMessage] = useState('');
 
@@ -53,28 +55,58 @@ const CombinedProfitLossReport = () => {
         }
     };
 
-    const fetchBarChartData = async () => {
+    // const fetchBarChartData = async () => {
+    //     try {
+    //         const response = await API.get('/admin/profit-loss/monthly/bar');
+    //         const data = response.data;
+    //         const currentDate = new Date();
+    //         const months = [];
+    //         for (let i = 0; i < 3; i++) {
+    //             const d = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+    //             const formatted = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    //             months.push(formatted);
+    //         }
+    //         const filteredData = data.filter(item => months.includes(item.month));
+    //         filteredData.sort((a, b) => (a.month > b.month ? 1 : -1));
+    //         setBarData(filteredData);
+    //     } catch (error) {
+    //         console.error('Error fetching bar chart data:', error);
+    //     }
+    // };
+
+    const fetchMonthlyBarChartData = async () => {
         try {
             const response = await API.get('/admin/profit-loss/monthly/bar');
-            const data = response.data;
-            const currentDate = new Date();
-            const months = [];
-            for (let i = 0; i < 3; i++) {
-                const d = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-                const formatted = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-                months.push(formatted);
-            }
-            const filteredData = data.filter(item => months.includes(item.month));
-            filteredData.sort((a, b) => (a.month > b.month ? 1 : -1));
-            setBarData(filteredData);
+            setMonthlyBarData(response.data);
         } catch (error) {
-            console.error('Error fetching bar chart data:', error);
+            console.error('Error fetching monthly bar chart data:', error);
         }
     };
 
+    // Fetch daily bar chart data for the last 5 days.
+    const fetchDailyBarChartData = async () => {
+        try {
+            const response = await API.get('/admin/profit-loss/daily/bar');
+            setDailyBarData(response.data);
+        } catch (error) {
+            console.error('Error fetching daily bar chart data:', error);
+        }
+    };
+
+    // const fetchDailyBarChartData = async () => {
+    //     try {
+    //         const response = await API.get('/admin/profit-loss/daily/bar');
+    //         setDailyBarData(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching daily bar chart data:', error);
+    //     }
+    // };
+
+
     useEffect(() => {
         fetchAllSales();
-        fetchBarChartData();
+        fetchMonthlyBarChartData();
+        fetchDailyBarChartData();
     }, []);
 
     return (
@@ -86,25 +118,25 @@ const CombinedProfitLossReport = () => {
                     placeholder="Year (e.g., 2023)"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    style={{ marginRight: '5px', padding: '5px' }}
+                    style={{marginRight: '5px', padding: '5px'}}
                 />
                 <input
                     type="number"
                     placeholder="Month (1-12)"
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
-                    style={{ marginRight: '5px', padding: '5px' }}
+                    style={{marginRight: '5px', padding: '5px'}}
                 />
-                <button onClick={fetchMonthlySales} style={{ padding: '5px 10px', marginRight: '5px' }}>
+                <button onClick={fetchMonthlySales} style={{padding: '5px 10px', marginRight: '5px'}}>
                     Filter by Month
                 </button>
-                <button onClick={fetchAllSales} style={{ padding: '5px 10px' }}>
+                <button onClick={fetchAllSales} style={{padding: '5px 10px'}}>
                     Show All Transactions
                 </button>
             </div>
             {message && <p>{message}</p>}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                <div style={{ width: '48%' }}>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
+                <div style={{width: '48%'}}>
                     <h4>Profit Transactions</h4>
                     {profitTransactions.length > 0 ? (
                         <table border="1" cellPadding="5">
@@ -142,7 +174,7 @@ const CombinedProfitLossReport = () => {
                         <p>No profit transactions found.</p>
                     )}
                 </div>
-                <div style={{ width: '48%' }}>
+                <div style={{width: '48%'}}>
                     <h4>Loss Transactions</h4>
                     {lossTransactions.length > 0 ? (
                         <table border="1" cellPadding="5">
@@ -181,22 +213,56 @@ const CombinedProfitLossReport = () => {
                     )}
                 </div>
             </div>
-            <div style={{ marginTop: '40px' }}>
-                <h4>Monthly Profit Bar Chart (Last 3 Months)</h4>
-                {barData.length > 0 ? (
-                    <BarChart width={600} height={300} data={barData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="profit" fill="#82ca9d" />
-                    </BarChart>
-                ) : (
-                    <p>No bar chart data available.</p>
-                )}
+            {/*<div style={{marginTop: '40px'}}>*/}
+            {/*    <h4>Monthly Profit Bar Chart (Last 3 Months)</h4>*/}
+            {/*    {barData.length > 0 ? (*/}
+            {/*        <BarChart width={600} height={300} data={barData}>*/}
+            {/*            <CartesianGrid strokeDasharray="3 3"/>*/}
+            {/*            <XAxis dataKey="month"/>*/}
+            {/*            <YAxis/>*/}
+            {/*            <Tooltip/>*/}
+            {/*            <Legend/>*/}
+            {/*            <Bar dataKey="profit" fill="#82ca9d"/>*/}
+            {/*        </BarChart>*/}
+            {/*    ) : (*/}
+            {/*        <p>No bar chart data available.</p>*/}
+            {/*    )}*/}
+            {/*</div>*/}
+
+            <div style={{display: 'flex', justifyContent: 'space-around', marginTop: '40px'}}>
+                <div>
+                    <h4>Monthly Profit Bar Chart (Last 3 Months)</h4>
+                    {monthlyBarData && monthlyBarData.length > 0 ? (
+                        <BarChart width={600} height={300} data={monthlyBarData}>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="month"/>
+                            <YAxis/>
+                            <Tooltip/>
+                            <Legend/>
+                            <Bar dataKey="profit" fill="#82ca9d"/>
+                        </BarChart>
+                    ) : (
+                        <p>No monthly bar chart data available.</p>
+                    )}
+                </div>
+                <div>
+                    <h4>Daily Profit Bar Chart (Last 5 Days)</h4>
+                    {dailyBarData && dailyBarData.length > 0 ? (
+                        <BarChart width={400} height={300} data={dailyBarData}>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="date"/>
+                            <YAxis/>
+                            <Tooltip/>
+                            <Legend/>
+                            <Bar dataKey="profit" fill="#8884d8"/>
+                        </BarChart>
+                    ) : (
+                        <p>No daily bar chart data available.</p>
+                    )}
+                </div>
             </div>
         </div>
+
     );
 };
 

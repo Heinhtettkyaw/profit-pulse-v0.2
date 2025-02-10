@@ -1,6 +1,7 @@
 // src/main/java/com/profitpulse/profit_pulse_backend/service/ProfitLossService.java
 package com.profitpulse.profit_pulse_backend.service;
 
+import com.profitpulse.profit_pulse_backend.dto.DailyProfitData;
 import com.profitpulse.profit_pulse_backend.dto.MonthlyProfitData;
 import com.profitpulse.profit_pulse_backend.dto.ProfitLossDTO;
 import com.profitpulse.profit_pulse_backend.entity.Sale;
@@ -92,7 +93,7 @@ public class ProfitLossService {
 
     public List<MonthlyProfitData> getMonthlyProfitData() {
         List<MonthlyProfitData> result = new ArrayList<>();
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < 3; i++) {
             YearMonth ym = YearMonth.from(now).minusMonths(i);
             double profit = salesRepository.findAll().stream()
@@ -109,6 +110,23 @@ public class ProfitLossService {
             result.add(new MonthlyProfitData(ym.toString(), profit));
         }
         result.sort((a, b) -> a.getMonth().compareTo(b.getMonth()));
+        return result;
+    }
+    public List<DailyProfitData> getDailyProfitData() {
+        List<DailyProfitData> result = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 5; i++) {
+            LocalDate date = today.minusDays(i);
+            double profit = salesRepository.findAll().stream()
+                    .filter(sale -> {
+                        LocalDate saleDate = sale.getTimestamp() != null ? sale.getTimestamp().toLocalDate() : null;
+                        return saleDate != null && saleDate.equals(date);
+                    })
+                    .mapToDouble(sale -> (sale.getSoldPrice() - sale.getOriginalPrice()) * sale.getQuantitySold())
+                    .sum();
+            result.add(new DailyProfitData(date.toString(), profit));
+        }
+        result.sort((a, b) -> a.getDate().compareTo(b.getDate()));
         return result;
     }
 }

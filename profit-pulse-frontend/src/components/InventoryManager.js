@@ -99,13 +99,13 @@ const InventoryManager = () => {
                     onChange={(e) => setNewItem({ ...newItem, supplierName: e.target.value })}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
-                <input
-                    type="number"
-                    placeholder="General Fee"
-                    value={newItem.generalFee}
-                    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
+                {/*<input*/}
+                {/*    type="number"*/}
+                {/*    placeholder="General Fee"*/}
+                {/*    value={newItem.generalFee}*/}
+                {/*    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}*/}
+                {/*    style={{ marginRight: '5px', padding: '5px' }}*/}
+                {/*/>*/}
                 <button onClick={handleAddItem} style={{ padding: '5px 10px' }}>
                     Add Item
                 </button>
@@ -167,7 +167,7 @@ const InventoryManager = () => {
                         <th>Quantity</th>
                         <th>Original Price</th>
                         <th>Supplier Name</th>
-                        <th>General Fee</th>
+                        {/*<th>General Fee</th>*/}
                         <th>Imported On</th>
                         <th>Actions</th>
                     </tr>
@@ -179,7 +179,7 @@ const InventoryManager = () => {
                             <td>{item.quantity}</td>
                             <td>{item.originalPrice}</td>
                             <td>{item.supplierName}</td>
-                            <td>{item.generalFee}</td>
+                            {/*<td>{item.generalFee}</td>*/}
                             <td>{item.importTimestamp ? new Date(item.importTimestamp).toLocaleString() : ''}</td>
                             <td>
                                 <button onClick={() => handleEditItem(item)} style={{ marginRight: '5px' }}>Edit</button>
