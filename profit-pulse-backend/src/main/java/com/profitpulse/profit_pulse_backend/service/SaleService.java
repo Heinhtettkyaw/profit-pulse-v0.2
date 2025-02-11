@@ -60,19 +60,12 @@ public class SaleService {
         sale.setTimestamp(LocalDateTime.now());
         String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         sale.setCashierUsername(cashierUsername);
+        // Calculate profit: (adjustedSoldPrice - inventory.originalPrice) * quantitySold.
+        double profit = (adjustedSoldPrice - inventory.getOriginalPrice()) * saleDTO.getQuantitySold();
+        sale.setProfit(profit);
+
         sale = salesRepository.save(sale);
-//        Sale sale = new Sale();
-//        sale.setItemName(inventory.getItemName());
-//        sale.setOriginalPrice(inventory.getOriginalPrice());
-//        sale.setQuantitySold(saleDTO.getQuantitySold());
-//        sale.setSoldPrice(saleDTO.getSoldPrice());
-//        sale.setBuyerName(saleDTO.getBuyerName());
-//        sale.setGeneralFee(saleDTO.getGeneralFee());
-//        sale.setTimestamp(LocalDateTime.now());
-//        String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-//        sale.setCashierUsername(cashierUsername);
-//        // Optionally, you can store st reference if needed. (Not used for profit/loss calculations.)
-//        sale = salesRepository.save(sale);
+
 
         // If inventory is now sold out, delete the Inventory record.
         if (newQuantity == 0) {

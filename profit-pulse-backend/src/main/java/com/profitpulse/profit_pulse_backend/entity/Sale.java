@@ -25,4 +25,5 @@ public class Sale {
 
     private LocalDateTime timestamp;
     private String cashierUsername;
+    private double profit;
 }
