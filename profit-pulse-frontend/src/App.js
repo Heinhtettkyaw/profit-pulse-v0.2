@@ -8,6 +8,7 @@ import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
 import ProfitLossReport from './components/ProfitLossReport';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
+import AdminChangePassword from './components/AdminChangePassword';
 // import ProfitLossPage from './components/ProfitLossPage';
 import ManageCashiers from './components/ManageCashiers';
 import ChangePassword from './components/ChangePassword';
@@ -38,6 +39,8 @@ function App() {
             <Route path="sales-transactions" element={<TransactionList />} />
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />
             <Route path="manage-cashiers" element={<ManageCashiers />} />
+            <Route path="change-password" element={<AdminChangePassword />} />
+
             <Route index element={<InventoryManager />} />
           </Route>
 
