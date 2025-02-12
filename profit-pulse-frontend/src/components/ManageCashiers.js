@@ -9,6 +9,7 @@ const ManageCashiers = () => {
     const [showPrompt, setShowPrompt] = useState(false);
     const [promptMessage, setPromptMessage] = useState('');
     const [pendingAction, setPendingAction] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false); // State to control form visibility
 
     const fetchCashiers = async () => {
         try {
@@ -27,7 +28,7 @@ const ManageCashiers = () => {
     const executeAction = async (action, adminPwd) => {
         try {
             await action(adminPwd);
-            setMessage('Operation successful.');
+            setMessage('Operation successful.'); // Success message
             fetchCashiers();
         } catch (error) {
             console.error('Error executing action:', error);
@@ -45,6 +46,7 @@ const ManageCashiers = () => {
             await API.post('/admin/cashiers?adminPassword=' + encodeURIComponent(adminPwd), newCashier);
             setMessage('Cashier added successfully!');
             setNewCashier({ username: '', password: '' });
+            setShowAddForm(false); // Hide the form after adding
         });
         setShowPrompt(true);
     };
@@ -80,9 +82,13 @@ const ManageCashiers = () => {
     };
 
     return (
-        <div>
-            <h3>Manage Cashiers</h3>
-            {message && <p>{message}</p>}
+        <div className="p-4">
+            <h3 className="text-2xl font-bold mb-4">Manage Cashiers</h3>
+            {message && (
+                <p className={`mb-4 ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
+                    {message}
+                </p>
+            )}
             {showPrompt && (
                 <PasswordPrompt
                     promptMessage={promptMessage}
@@ -90,46 +96,71 @@ const ManageCashiers = () => {
                     onCancel={handlePromptCancel}
                 />
             )}
-            <div style={{ marginBottom: '20px' }}>
-                <h4>Add New Cashier</h4>
-                <input
-                    type="text"
-                    placeholder="Username"
-                    value={newCashier.username}
-                    onChange={(e) => setNewCashier({ ...newCashier, username: e.target.value })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={newCashier.password}
-                    onChange={(e) => setNewCashier({ ...newCashier, password: e.target.value })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <button onClick={handleAddCashier} style={{ padding: '5px 10px' }}>
-                    Add Cashier
+            <div className="mb-6">
+                <button
+                    onClick={() => setShowAddForm(!showAddForm)} // Toggle form visibility
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none"
+                >
+                    Add New Cashier
                 </button>
+                {showAddForm && ( // Render form only when showAddForm is true
+                    <div className="mt-4">
+                        <h4 className="text-lg font-semibold mb-2">Add New Cashier</h4>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="text"
+                                placeholder="Username"
+                                value={newCashier.username}
+                                onChange={(e) =>
+                                    setNewCashier({ ...newCashier, username: e.target.value })
+                                }
+                                className="border border-gray-300 rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                            <input
+                                type="password"
+                                placeholder="Password"
+                                value={newCashier.password}
+                                onChange={(e) =>
+                                    setNewCashier({ ...newCashier, password: e.target.value })
+                                }
+                                className="border border-gray-300 rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                            <button
+                                onClick={handleAddCashier}
+                                className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 focus:outline-none"
+                            >
+                                Add Cashier
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
-            <h4>Existing Cashiers</h4>
+            <h4 className="text-lg font-semibold mb-2">Existing Cashiers</h4>
             {cashiers.length > 0 ? (
-                <table border="1" cellPadding="5">
+                <table className="border-collapse border border-gray-300 w-full">
                     <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Actions</th>
+                    <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Username</th>
+                        <th className="border border-gray-300 px-4 py-2 text-left">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {cashiers.map((cashier) => (
-                        <tr key={cashier.id}>
-                            <td>{cashier.id}</td>
-                            <td>{cashier.username}</td>
-                            <td>
-                                <button onClick={() => handleResetPassword(cashier.id)} style={{ marginRight: '5px' }}>
+                        <tr key={cashier.id} className="hover:bg-gray-50">
+                            <td className="border border-gray-300 px-4 py-2">{cashier.id}</td>
+                            <td className="border border-gray-300 px-4 py-2">{cashier.username}</td>
+                            <td className="border border-gray-300 px-4 py-2 flex space-x-2">
+                                <button
+                                    onClick={() => handleResetPassword(cashier.id)}
+                                    className="bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 focus:outline-none"
+                                >
                                     Reset Password
                                 </button>
-                                <button onClick={() => handleDeleteCashier(cashier.id)}>
+                                <button
+                                    onClick={() => handleDeleteCashier(cashier.id)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 focus:outline-none"
+                                >
                                     Delete
                                 </button>
                             </td>
@@ -138,7 +169,7 @@ const ManageCashiers = () => {
                     </tbody>
                 </table>
             ) : (
-                <p>No cashiers found.</p>
+                <p className="text-gray-500">No cashiers found.</p>
             )}
         </div>
     );

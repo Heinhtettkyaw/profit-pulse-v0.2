@@ -18,54 +18,77 @@ const AdminChangePassword = () => {
             const response = await API.put('/admin/profile/change-password', {
                 oldPassword,
                 newPassword,
-                confirmPassword
+                confirmPassword,
             });
             setMessage(response.data);
             setOldPassword('');
             setNewPassword('');
             setConfirmPassword('');
         } catch (error) {
-            console.error("Error changing password:", error);
-            setMessage(error.response?.data || "Error changing password.");
+            console.error('Error changing password:', error);
+            setMessage(error.response?.data || 'Error changing password.');
         }
     };
 
     return (
-        <div style={{ maxWidth: '250px',marginBottom: '10px' }}>
-            <h3>Change Admin Password</h3>
-            {message && <p>{message}</p>}
-            <form onSubmit={handleChangePassword}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label>Old Password:</label>
+        <div className="p-6 max-w-md mx-auto bg-gray-100 rounded-lg shadow-md">
+            {/* Header */}
+            <h3 className="text-xl font-bold mb-4">Change Admin Password</h3>
+
+            {/* Message Display */}
+            {message && (
+                <p
+                    className={`text-sm font-medium mb-4 ${
+                        message.includes('successful') ? 'text-green-500' : 'text-red-500'
+                    }`}
+                >
+                    {message}
+                </p>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleChangePassword} className="space-y-4">
+                {/* Old Password Field */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Old Password:</label>
                     <input
                         type="password"
                         value={oldPassword}
                         onChange={(e) => setOldPassword(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px' }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                     />
                 </div>
-                <div style={{ marginBottom: '10px' }}>
-                    <label>New Password:</label>
+
+                {/* New Password Field */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">New Password:</label>
                     <input
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px' }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                     />
                 </div>
-                <div style={{ marginBottom: '10px' }}>
-                    <label>Confirm Password:</label>
+
+                {/* Confirm Password Field */}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password:</label>
                     <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
-                        style={{ width: '100%', padding: '8px' }}
+                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                     />
                 </div>
-                <button type="submit" style={{ padding: '8px 16px' }}>
+
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                >
                     Change Password
                 </button>
             </form>

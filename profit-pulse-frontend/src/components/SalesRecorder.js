@@ -4,7 +4,13 @@ import API from '../services/api';
 
 const SalesRecorder = () => {
     const [inventory, setInventory] = useState([]);
-    const [sale, setSale] = useState({ inventoryId: '', quantitySold: 0, soldPrice: 0, buyerName: '', generalFee: 0 });
+    const [sale, setSale] = useState({
+        inventoryId: '',
+        quantitySold: 0,
+        soldPrice: 0,
+        buyerName: '',
+        generalFee: 0,
+    });
     const [message, setMessage] = useState('');
 
     useEffect(() => {
@@ -26,7 +32,7 @@ const SalesRecorder = () => {
 
     const handleRecordSale = async () => {
         try {
-            const selectedItem = inventory.find(item => item.id === parseInt(sale.inventoryId));
+            const selectedItem = inventory.find((item) => item.id === parseInt(sale.inventoryId));
             if (!selectedItem) {
                 setMessage('Invalid inventory ID.');
                 return;
@@ -40,7 +46,7 @@ const SalesRecorder = () => {
                 quantitySold: parseInt(sale.quantitySold),
                 soldPrice: parseFloat(sale.soldPrice),
                 buyerName: sale.buyerName,
-                generalFee: parseFloat(sale.generalFee)
+                generalFee: parseFloat(sale.generalFee),
             });
             setMessage('Sale recorded successfully!');
             setSale({ inventoryId: '', quantitySold: 0, soldPrice: 0, buyerName: '', generalFee: 0 });
@@ -52,92 +58,108 @@ const SalesRecorder = () => {
     };
 
     return (
-        <div>
-            <h3>Sales Recorder</h3>
-            {message && <p>{message}</p>}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ flex: 1, marginRight: '20px' }}>
-                    <h4>Available Inventory</h4>
+        <div className="p-4">
+            <h3 className="text-2xl font-bold mb-4">Sales Recorder</h3>
+            {message && (
+                <p
+                    className={`mb-4 ${
+                        message.includes('successful') ? 'text-green-500' : 'text-red-500'
+                    }`}
+                >
+                    {message}
+                </p>
+            )}
+            <div className="flex space-x-6">
+                {/* Available Inventory Section */}
+                <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2">Available Inventory</h4>
                     {inventory.length > 0 ? (
-                        <table border="1" cellPadding="5">
-                            <thead>
+                        <table className="border-collapse border border-gray-300 w-full">
+                            <thead className="bg-gray-100">
                             <tr>
-                                <th>ID</th>
-                                <th>Item Name</th>
-                                <th>Original Price</th>
-                                <th>In-Stock</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left">Item Name</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left">Original Price</th>
+                                <th className="border border-gray-300 px-4 py-2 text-left">In-Stock</th>
                             </tr>
                             </thead>
                             <tbody>
                             {inventory.map((item) => (
-                                <tr key={item.id}>
-                                    <td>{item.id}</td>
-                                    <td>{item.itemName}</td>
-                                    <td>{item.originalPrice}</td>
-                                    <td>{item.quantity}</td>
+                                <tr key={item.id} className="hover:bg-gray-50">
+                                    <td className="border border-gray-300 px-4 py-2">{item.id}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{item.itemName}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{item.originalPrice}</td>
+                                    <td className="border border-gray-300 px-4 py-2">{item.quantity}</td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
                     ) : (
-                        <p>No inventory items available.</p>
+                        <p className="text-gray-500">No inventory items available.</p>
                     )}
                 </div>
-                <div style={{ flex: 1 }}>
-                    <h4>Record a Sale</h4>
-                    <div style={{ marginBottom: '10px' }}>
-                        <input
-                            type="number"
-                            name="inventoryId"
-                            placeholder="Inventory ID"
-                            value={sale.inventoryId}
-                            onChange={handleChange}
-                            style={{ width: '100%', padding: '5px' }}
-                        />
+
+                {/* Record Sale Section */}
+                <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2">Record a Sale</h4>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Inventory ID</label>
+                            <input
+                                type="number"
+                                name="inventoryId"
+                                value={sale.inventoryId}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity Sold</label>
+                            <input
+                                type="number"
+                                name="quantitySold"
+                                value={sale.quantitySold}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Sold Price Per Each Item</label>
+                            <input
+                                type="number"
+                                name="soldPrice"
+                                value={sale.soldPrice}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Buyer Name</label>
+                            <input
+                                type="text"
+                                name="buyerName"
+                                value={sale.buyerName}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <input
+                                type="number"
+                                name="generalFee"
+                                value={sale.generalFee}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            />
+                        </div>
+                        <button
+                            onClick={handleRecordSale}
+                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none"
+                        >
+                            Record Sale
+                        </button>
                     </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <input
-                            type="number"
-                            name="quantitySold"
-                            placeholder="Quantity Sold"
-                            value={sale.quantitySold}
-                            onChange={handleChange}
-                            style={{ width: '100%', padding: '5px' }}
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <input
-                            type="number"
-                            name="soldPrice"
-                            placeholder="Sold Price"
-                            value={sale.soldPrice}
-                            onChange={handleChange}
-                            style={{ width: '100%', padding: '5px' }}
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <input
-                            type="text"
-                            name="buyerName"
-                            placeholder="Buyer Name"
-                            value={sale.buyerName}
-                            onChange={handleChange}
-                            style={{ width: '100%', padding: '5px' }}
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <input
-                            type="number"
-                            name="generalFee"
-                            placeholder="General Fee"
-                            value={sale.generalFee}
-                            onChange={handleChange}
-                            style={{ width: '100%', padding: '5px' }}
-                        />
-                    </div>
-                    <button onClick={handleRecordSale} style={{ padding: '5px 10px' }}>
-                        Record Sale
-                    </button>
                 </div>
             </div>
         </div>
