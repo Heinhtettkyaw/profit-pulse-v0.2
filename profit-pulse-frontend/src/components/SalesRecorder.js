@@ -125,16 +125,16 @@ const SalesRecorder = () => {
                             style={{ width: '100%', padding: '5px' }}
                         />
                     </div>
-                    {/*<div style={{ marginBottom: '10px' }}>*/}
-                    {/*    <input*/}
-                    {/*        type="number"*/}
-                    {/*        name="generalFee"*/}
-                    {/*        placeholder="General Fee"*/}
-                    {/*        value={sale.generalFee}*/}
-                    {/*        onChange={handleChange}*/}
-                    {/*        style={{ width: '100%', padding: '5px' }}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
+                    <div style={{ marginBottom: '10px' }}>
+                        <input
+                            type="number"
+                            name="generalFee"
+                            placeholder="General Fee"
+                            value={sale.generalFee}
+                            onChange={handleChange}
+                            style={{ width: '100%', padding: '5px' }}
+                        />
+                    </div>
                     <button onClick={handleRecordSale} style={{ padding: '5px 10px' }}>
                         Record Sale
                     </button>

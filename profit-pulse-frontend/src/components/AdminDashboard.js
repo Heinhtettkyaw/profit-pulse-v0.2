@@ -24,6 +24,7 @@ const AdminDashboard = () => {
                     <li><Link to="combined-profit-loss">Profit Loss Details</Link></li>
                     <li><Link to="manage-cashiers">Manage Cashiers</Link></li>
                     <li><Link to="change-password">Change Password</Link></li>
+                    <li><Link to="forecast">Forecast</Link></li>
                 </ul>
             </nav>
             <button onClick={handleLogout} style={{ marginTop: '10px' }}>Logout</button>

@@ -45,23 +45,23 @@ public class SaleService {
         // Retrieve the supplier transaction record from Inventory.
         SupplierTransaction st = inventory.getSupplierTransaction();
         // Compute the sale fee as 5% of the provided sold price.
-        double saleFee = saleDTO.getSoldPrice() * 0.05;
-        // Adjust the sold price by adding the fee.
-        double adjustedSoldPrice = saleDTO.getSoldPrice() + saleFee;
+//        double saleFee = saleDTO.getSoldPrice() * 0.05;
+//        // Adjust the sold price by adding the fee.
+//        double adjustedSoldPrice = saleDTO.getSoldPrice() + saleFee;
 
         // Create a new Sale record capturing item details at sale time.
         Sale sale = new Sale();
         sale.setItemName(inventory.getItemName());
         sale.setOriginalPrice(inventory.getOriginalPrice()); // This is the adjusted price from inventory.
         sale.setQuantitySold(saleDTO.getQuantitySold());
-        sale.setSoldPrice(adjustedSoldPrice);
+        sale.setSoldPrice(saleDTO.getSoldPrice());
         sale.setBuyerName(saleDTO.getBuyerName());
-        sale.setGeneralFee(saleFee);
+        sale.setGeneralFee(saleDTO.getGeneralFee());
         sale.setTimestamp(LocalDateTime.now());
         String cashierUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         sale.setCashierUsername(cashierUsername);
         // Calculate profit: (adjustedSoldPrice - inventory.originalPrice) * quantitySold.
-        double profit = (adjustedSoldPrice - inventory.getOriginalPrice()) * saleDTO.getQuantitySold();
+        double profit = (saleDTO.getSoldPrice() - inventory.getOriginalPrice()) * saleDTO.getQuantitySold();
         sale.setProfit(profit);
 
         sale = salesRepository.save(sale);

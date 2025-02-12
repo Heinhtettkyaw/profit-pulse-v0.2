@@ -99,13 +99,13 @@ const InventoryManager = () => {
                     onChange={(e) => setNewItem({ ...newItem, supplierName: e.target.value })}
                     style={{ marginRight: '5px', padding: '5px' }}
                 />
-                {/*<input*/}
-                {/*    type="number"*/}
-                {/*    placeholder="General Fee"*/}
-                {/*    value={newItem.generalFee}*/}
-                {/*    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}*/}
-                {/*    style={{ marginRight: '5px', padding: '5px' }}*/}
-                {/*/>*/}
+                <input
+                    type="number"
+                    placeholder="General Fee"
+                    value={newItem.generalFee}
+                    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}
+                    style={{ marginRight: '5px', padding: '5px' }}
+                />
                 <button onClick={handleAddItem} style={{ padding: '5px 10px' }}>
                     Add Item
                 </button>

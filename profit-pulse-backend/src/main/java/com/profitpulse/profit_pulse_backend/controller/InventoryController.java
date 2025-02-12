@@ -49,7 +49,7 @@ public Inventory addInventory(@RequestBody Inventory inventory) {
     }
 
     // Compute the general fee as 5% of the entered original price.
-    double fee = inventory.getOriginalPrice() * 0.05;
+    double fee = inventory.getGeneralFee();
     // Set the computed fee.
     inventory.setGeneralFee(fee);
     // Update the original price to include the fee.
