@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import './index.css';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import CashierDashboard from './components/CashierDashboard';
@@ -10,7 +11,6 @@ import ProfitLossReport from './components/ProfitLossReport';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
 import AdminChangePassword from './components/AdminChangePassword';
 import Forecast from './components/Forecast';
-// import ProfitLossPage from './components/ProfitLossPage';
 import ManageCashiers from './components/ManageCashiers';
 import ChangePassword from './components/ChangePassword';
 import { AuthContext } from './context/AuthContext';

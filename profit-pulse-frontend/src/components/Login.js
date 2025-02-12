@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
@@ -31,17 +30,17 @@ const Login = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: 'auto', paddingTop: '100px' }}>
-            <h2>Login</h2>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
+        <div className="max-w-md mx-auto pt-24">
+            <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                     type="text"
                     name="username"
                     placeholder="Username"
                     value={credentials.username}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                     required
                 />
                 <input
@@ -50,10 +49,13 @@ const Login = () => {
                     placeholder="Password"
                     value={credentials.password}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                     required
                 />
-                <button type="submit" style={{ width: '100%', padding: '8px' }}>
+                <button
+                    type="submit"
+                    className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                >
                     Login
                 </button>
             </form>

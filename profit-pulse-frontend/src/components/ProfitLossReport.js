@@ -1,4 +1,3 @@
-// src/components/ProfitLossReport.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -26,7 +25,7 @@ const ProfitLossReport = () => {
         }
         try {
             const response = await API.get('/admin/profit-loss/monthly', {
-                params: { year, month }
+                params: { year, month },
             });
             setReport(response.data);
             setMessage('');
@@ -41,58 +40,75 @@ const ProfitLossReport = () => {
     }, []);
 
     return (
-        <div>
-            <h3>Overall Profit &amp; Loss Report</h3>
-            <div>
+        <div className="p-6">
+            <h3 className="text-xl font-bold mb-4">Overall Profit & Loss Report</h3>
+
+            {/* Search Inputs */}
+            <div className="mb-6 flex flex-wrap items-center space-x-2">
+                {/* Year Label and Input */}
+                <label className="block text-sm font-medium text-gray-700 mr-2">Year (e.g., 2023):</label>
                 <input
                     type="number"
-                    placeholder="Year (e.g., 2023)"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    style={{ marginRight: '5px', padding: '5px' }}
+                    className="w-40 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-24"
                 />
+
+                {/* Month Label and Input */}
+                <label className="block text-sm font-medium text-gray-700 ml-2 mr-2">Month (1-12):</label>
                 <input
                     type="number"
-                    placeholder="Month (1-12)"
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
-                    style={{ marginRight: '5px', padding: '5px' }}
+                    className="w-40 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-16"
                 />
-                <button onClick={fetchMonthlyReport} style={{ padding: '5px 10px', marginRight: '5px' }}>
+
+                {/* Buttons */}
+                <button
+                    onClick={fetchMonthlyReport}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                >
                     Search by Month
                 </button>
-                <button onClick={fetchOverallReport} style={{ padding: '5px 10px' }}>
+                <button
+                    onClick={fetchOverallReport}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none ml-2"
+                >
                     Overall Report
                 </button>
             </div>
-            {message && <p>{message}</p>}
+
+            {/* Message Display */}
+            {message && <p className="text-red-500 mb-4">{message}</p>}
+
+            {/* Report Table */}
             {report ? (
-                <div style={{ marginTop: '20px' }}>
-                    <table border="1" cellPadding="5">
-                        <thead>
+                <div className="mt-6">
+                    <table className="min-w-full border border-gray-300">
+                        <thead className="bg-gray-200">
                         <tr>
-                            <th>Total Investment Value</th>
-                            <th>Total Sale Value</th>
-                            <th>Overall Profit</th>
-                            <th>Total Profit (Profitable Sales)</th>
-                            <th>Total Loss (Loss-making Sales)</th>
-                            <th>Total Inventory Value</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Total Investment Value</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Total Sale Value</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Overall Profit</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Total Profit (Profitable Sales)</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Total Loss (Loss-making Sales)</th>
+                            <th className="border border-gray-300 px-4 py-2 text-left">Total Inventory Value</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>{report.totalInvestmentValue}</td>
-                            <td>{report.totalSaleValue}</td>
-                            <td>{report.overallProfit}</td>
-                            <td>{report.profitOnly}</td>
-                            <td>{report.lossOnly}</td>
-                            <td>{report.totalInventoryValue}</td>
+                        <tr className="hover:bg-gray-100">
+                            <td className="border border-gray-300 px-4 py-2">{report.totalInvestmentValue}</td>
+                            <td className="border border-gray-300 px-4 py-2">{report.totalSaleValue}</td>
+                            <td className="border border-gray-300 px-4 py-2">{report.overallProfit}</td>
+                            <td className="border border-gray-300 px-4 py-2">{report.profitOnly}</td>
+                            <td className="border border-gray-300 px-4 py-2">{report.lossOnly}</td>
+                            <td className="border border-gray-300 px-4 py-2">{report.totalInventoryValue}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             ) : (
-                <p>Loading report...</p>
+                <p className="text-gray-500 mt-6">Loading report...</p>
             )}
         </div>
     );

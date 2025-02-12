@@ -1,4 +1,3 @@
-// src/components/InventoryManager.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -7,6 +6,7 @@ const InventoryManager = () => {
     const [newItem, setNewItem] = useState({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '', generalFee: 0 });
     const [message, setMessage] = useState('');
     const [editItem, setEditItem] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false); // State to control form visibility
 
     useEffect(() => {
         fetchInventory();
@@ -27,6 +27,7 @@ const InventoryManager = () => {
             await API.post('/admin/inventory/add', newItem);
             setMessage('Item added successfully!');
             setNewItem({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '', generalFee: 0 });
+            setShowAddForm(false); // Hide the form after adding an item
             fetchInventory();
         } catch (error) {
             console.error('Error adding item:', error);
@@ -66,131 +67,252 @@ const InventoryManager = () => {
     };
 
     return (
-        <div>
-            <h3>Inventory Manager</h3>
-            {message && <p>{message}</p>}
-            <div style={{ marginBottom: '20px' }}>
-                <h4>Add New Item</h4>
-                <input
-                    type="text"
-                    placeholder="Item Name"
-                    value={newItem.itemName}
-                    onChange={(e) => setNewItem({ ...newItem, itemName: e.target.value })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <input
-                    type="number"
-                    placeholder="Quantity"
-                    value={newItem.quantity}
-                    onChange={(e) => setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 0 })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <input
-                    type="number"
-                    placeholder="Original Price"
-                    value={newItem.originalPrice}
-                    onChange={(e) => setNewItem({ ...newItem, originalPrice: parseFloat(e.target.value) || 0 })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <input
-                    type="text"
-                    placeholder="Supplier Name"
-                    value={newItem.supplierName}
-                    onChange={(e) => setNewItem({ ...newItem, supplierName: e.target.value })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <input
-                    type="number"
-                    placeholder="General Fee"
-                    value={newItem.generalFee}
-                    onChange={(e) => setNewItem({ ...newItem, generalFee: parseFloat(e.target.value) || 0 })}
-                    style={{ marginRight: '5px', padding: '5px' }}
-                />
-                <button onClick={handleAddItem} style={{ padding: '5px 10px' }}>
-                    Add Item
-                </button>
-            </div>
+        <div className="p-6">
+            <h3 className="text-xl font-bold mb-4">Inventory Manager</h3>
+            {message && <p className="text-green-500 mb-4">{message}</p>}
 
-            {editItem && (
-                <div style={{ marginBottom: '20px', border: '1px solid #ccc', padding: '10px' }}>
-                    <h4>Edit Item</h4>
-                    <input
-                        type="text"
-                        placeholder="Item Name"
-                        value={editItem.itemName}
-                        onChange={(e) => setEditItem({ ...editItem, itemName: e.target.value })}
-                        style={{ marginRight: '5px', padding: '5px' }}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Quantity"
-                        value={editItem.quantity}
-                        onChange={(e) => setEditItem({ ...editItem, quantity: parseInt(e.target.value) || 0 })}
-                        style={{ marginRight: '5px', padding: '5px' }}
-                    />
-                    <input
-                        type="number"
-                        placeholder="Original Price"
-                        value={editItem.originalPrice}
-                        onChange={(e) => setEditItem({ ...editItem, originalPrice: parseFloat(e.target.value) || 0 })}
-                        style={{ marginRight: '5px', padding: '5px' }}
-                    />
-                    <input
-                        type="text"
-                        placeholder="Supplier Name"
-                        value={editItem.supplierName}
-                        onChange={(e) => setEditItem({ ...editItem, supplierName: e.target.value })}
-                        style={{ marginRight: '5px', padding: '5px' }}
-                    />
-                    <input
-                        type="number"
-                        placeholder="General Fee"
-                        value={editItem.generalFee}
-                        onChange={(e) => setEditItem({ ...editItem, generalFee: parseFloat(e.target.value) || 0 })}
-                        style={{ marginRight: '5px', padding: '5px' }}
-                    />
-                    <button onClick={handleUpdateItem} style={{ padding: '5px 10px', marginRight: '5px' }}>
-                        Update
-                    </button>
-                    <button onClick={() => setEditItem(null)} style={{ padding: '5px 10px' }}>
-                        Cancel
-                    </button>
+            {/* Add Item Button */}
+            {!showAddForm && (
+                <button
+                    onClick={() => setShowAddForm(true)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none mb-4"
+                >
+                    Add New Item
+                </button>
+            )}
+
+            {/* Add New Item Section (Toggleable) */}
+            {showAddForm && (
+                <div className="mb-6 bg-gray-100 p-4 rounded shadow-md">
+                    <h4 className="text-lg font-semibold mb-2">Add New Item</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Item Name */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                            <input
+                                type="text"
+                                value={newItem.itemName}
+                                onChange={(e) =>
+                                    setNewItem({ ...newItem, itemName: e.target.value })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+                        {/* Quantity */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <input
+                                type="number"
+                                value={newItem.quantity}
+                                onChange={(e) =>
+                                    setNewItem({
+                                        ...newItem,
+                                        quantity: parseInt(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Original Price */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+                            <input
+                                type="number"
+                                value={newItem.originalPrice}
+                                onChange={(e) =>
+                                    setNewItem({
+                                        ...newItem,
+                                        originalPrice: parseFloat(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Supplier Name */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+                            <input
+                                type="text"
+                                value={newItem.supplierName}
+                                onChange={(e) =>
+                                    setNewItem({ ...newItem, supplierName: e.target.value })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+                        {/* General Fee */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <input
+                                type="number"
+                                value={newItem.generalFee}
+                                onChange={(e) =>
+                                    setNewItem({
+                                        ...newItem,
+                                        generalFee: parseFloat(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Add Item Button */}
+                        <div className="col-span-2 flex justify-between">
+                            <button
+                                onClick={handleAddItem}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
+                            >
+                                Add Item
+                            </button>
+                            <button
+                                onClick={() => setShowAddForm(false)}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
 
-            <h4>Inventory List</h4>
+            {/* Edit Item Section */}
+            {editItem && (
+                <div className="mb-6 bg-gray-100 p-4 rounded shadow-md">
+                    <h4 className="text-lg font-semibold mb-2">Edit Item</h4>
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Item Name */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                            <input
+                                type="text"
+                                value={editItem.itemName}
+                                onChange={(e) =>
+                                    setEditItem({ ...editItem, itemName: e.target.value })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+                        {/* Quantity */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <input
+                                type="number"
+                                value={editItem.quantity}
+                                onChange={(e) =>
+                                    setEditItem({
+                                        ...editItem,
+                                        quantity: parseInt(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Original Price */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+                            <input
+                                type="number"
+                                value={editItem.originalPrice}
+                                onChange={(e) =>
+                                    setEditItem({
+                                        ...editItem,
+                                        originalPrice: parseFloat(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Supplier Name */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+                            <input
+                                type="text"
+                                value={editItem.supplierName}
+                                onChange={(e) =>
+                                    setEditItem({ ...editItem, supplierName: e.target.value })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                            />
+                        </div>
+                        {/* General Fee */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <input
+                                type="number"
+                                value={editItem.generalFee}
+                                onChange={(e) =>
+                                    setEditItem({
+                                        ...editItem,
+                                        generalFee: parseFloat(e.target.value) || 0,
+                                    })
+                                }
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                            />
+                        </div>
+                        {/* Update and Cancel Buttons */}
+                        <div className="col-span-2 flex justify-between">
+                            <button
+                                onClick={handleUpdateItem}
+                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none"
+                            >
+                                Update
+                            </button>
+                            <button
+                                onClick={() => setEditItem(null)}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Inventory List Section */}
+            <h4 className="text-lg font-semibold mb-2">Inventory List</h4>
             {inventory.length > 0 ? (
-                <table border="1" cellPadding="5">
-                    <thead>
+                <table className="min-w-full border border-gray-300">
+                    <thead className="bg-gray-200">
                     <tr>
-                        <th>Item Name</th>
-                        <th>Quantity</th>
-                        <th>Original Price</th>
-                        <th>Supplier Name</th>
-                        {/*<th>General Fee</th>*/}
-                        <th>Imported On</th>
-                        <th>Actions</th>
+                        <th className="border border-gray-300 px-4 py-2">Item Name</th>
+                        <th className="border border-gray-300 px-4 py-2">Quantity</th>
+                        <th className="border border-gray-300 px-4 py-2">Original Price</th>
+                        <th className="border border-gray-300 px-4 py-2">Supplier Name</th>
+                        <th className="border border-gray-300 px-4 py-2">Imported On</th>
+                        <th className="border border-gray-300 px-4 py-2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {inventory.map((item) => (
-                        <tr key={item.id}>
-                            <td>{item.itemName}</td>
-                            <td>{item.quantity}</td>
-                            <td>{item.originalPrice}</td>
-                            <td>{item.supplierName}</td>
-                            {/*<td>{item.generalFee}</td>*/}
-                            <td>{item.importTimestamp ? new Date(item.importTimestamp).toLocaleString() : ''}</td>
-                            <td>
-                                <button onClick={() => handleEditItem(item)} style={{ marginRight: '5px' }}>Edit</button>
-                                <button onClick={() => handleDeleteItem(item.id)}>Delete</button>
+                        <tr key={item.id} className="hover:bg-gray-100">
+                            <td className="border border-gray-300 px-4 py-2">{item.itemName}</td>
+                            <td className="border border-gray-300 px-4 py-2">{item.quantity}</td>
+                            <td className="border border-gray-300 px-4 py-2">{item.originalPrice}</td>
+                            <td className="border border-gray-300 px-4 py-2">{item.supplierName}</td>
+                            <td className="border border-gray-300 px-4 py-2">
+                                {item.importTimestamp
+                                    ? new Date(item.importTimestamp).toLocaleString()
+                                    : ''}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                                <button
+                                    onClick={() => handleEditItem(item)}
+                                    className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 hover:bg-yellow-600 focus:outline-none"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteItem(item.id)}
+                                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 focus:outline-none"
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
             ) : (
-                <p>No items found.</p>
+                <p className="text-gray-500">No items found.</p>
             )}
         </div>
     );
