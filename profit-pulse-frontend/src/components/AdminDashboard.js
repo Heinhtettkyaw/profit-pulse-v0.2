@@ -57,18 +57,33 @@ const AdminDashboard = () => {
                 >
                     Change Password
                 </Link>
+                {/*<Link*/}
+                {/*    to="forecast"*/}
+                {/*    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"*/}
+                {/*>*/}
+                {/*    Forecast*/}
+                {/*</Link>*/}
+                {/*<Link*/}
+                {/*    to="trend"*/}
+                {/*    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"*/}
+                {/*>*/}
+                {/*    Trend Analysis*/}
+                {/*</Link>*/}
                 <Link
-                    to="forecast"
+                    to="extended-analysis"
                     className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
                 >
-                    Forecast
+                    Extended Analysis
                 </Link>
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-4 py-2  rounded hover:bg-red-600 focus:outline-none "
-                >
-                    Logout
-                </button>
+
+                <div className="absolute right-10 flex justify-between ">
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 text-white px-4 py-2  rounded hover:bg-red-600 focus:outline-none "
+                    >
+                        Logout
+                    </button>
+                </div>
             </nav>
 
             <hr className="my-4"/>

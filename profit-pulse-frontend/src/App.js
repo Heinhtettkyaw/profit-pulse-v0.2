@@ -9,8 +9,10 @@ import TransactionList from './components/TransactionList';
 import SupplierTransactionList from './components/SupplierTransactionList';
 import ProfitLossReport from './components/ProfitLossReport';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
+import ExtendedAnalysis from './components/ExtendedAnalysis';
 import AdminChangePassword from './components/AdminChangePassword';
 import Forecast from './components/Forecast';
+import TrendAnalysis from './components/TrendAnalysis';
 import ManageCashiers from './components/ManageCashiers';
 import ChangePassword from './components/ChangePassword';
 import { AuthContext } from './context/AuthContext';
@@ -41,7 +43,9 @@ function App() {
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />
             <Route path="manage-cashiers" element={<ManageCashiers />} />
             <Route path="change-password" element={<AdminChangePassword />} />
-            <Route path="forecast" element={<Forecast />} />
+            {/*<Route path="forecast" element={<Forecast />} />*/}
+            {/*<Route path="trend" element={<TrendAnalysis />} />*/}
+            <Route path="extended-analysis" element={<ExtendedAnalysis />} />
 
             <Route index element={<InventoryManager />} />
           </Route>
