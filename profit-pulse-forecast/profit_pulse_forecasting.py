@@ -1,25 +1,19 @@
-# profit-pulse-forecasting.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 from sqlalchemy import create_engine
 from statsmodels.tsa.arima.model import ARIMA
-from prophet import Prophet
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 from datetime import timedelta
 import os
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for cross-origin requests
+CORS(app)
 
-# MySQL connection for profitpulse2 database (user: root, no password)
 DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://root:@localhost:3306/profitpulse2")
 engine = create_engine(DATABASE_URL)
 
 def get_sales_df():
-    """
-    Reads sale data from the database.
-    Expects table 'sale' with columns: timestamp, profit, item_name, buyer_name, cashier_username.
-    """
     query = "SELECT timestamp, profit, item_name, buyer_name, cashier_username FROM sale ORDER BY timestamp"
     df = pd.read_sql(query, engine)
     df['timestamp'] = pd.to_datetime(df['timestamp'])
@@ -27,71 +21,53 @@ def get_sales_df():
 
 @app.route('/analysis/forecast', methods=['GET'])
 def forecast_profit():
-    """
-    Ensemble forecast profit by averaging predictions from ARIMA and Prophet models.
-
-    Query Parameters:
-      - steps: number of future days to forecast (default: 5)
-    """
     try:
-        steps = request.args.get('steps', default=10, type=int)
+        steps = request.args.get('steps', default=5, type=int)
         df = get_sales_df()
 
-        # Aggregate profit by day
-        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].sum()
+        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].mean()
         ts = daily_profit.sort_index()
         ts.index = pd.to_datetime(ts.index)
         ts = ts.asfreq('D').fillna(0)
 
-        # ---- ARIMA Forecast ----
+        # ARIMA model for trend component (with differencing)
         arima_model = ARIMA(ts, order=(1, 1, 1))
         arima_fit = arima_model.fit()
-        forecast_arima = arima_fit.forecast(steps=steps)
+        arima_forecast = arima_fit.forecast(steps=steps)
+        arima_residuals = arima_fit.resid[1:]  # Skip first NaN from differencing
 
-        # ---- Prophet Forecast ----
-        prophet_df = ts.reset_index()
-        prophet_df.columns = ['ds', 'y']
-        prophet_model = Prophet()
-        prophet_model.fit(prophet_df)
-        future = prophet_model.make_future_dataframe(periods=steps, freq='D')
-        forecast_prophet_df = prophet_model.predict(future)
-        forecast_prophet = forecast_prophet_df.tail(steps)['yhat'].values
+        # SARIMAX model for residual seasonal component
+        sarima_model = SARIMAX(arima_residuals,
+                               order=(0, 0, 1),
+                               seasonal_order=(1, 0, 1, 7),
+                               enforce_stationarity=False)
+        sarima_fit = sarima_model.fit(disp=False)
+        sarima_forecast = sarima_fit.forecast(steps=steps)
 
-        # ---- Ensemble Forecast (average) ----
-        ensemble_forecast = (forecast_arima + forecast_prophet) / 2
+        # Hybrid forecast combination
+        hybrid_forecast = arima_forecast + sarima_forecast
 
-        # Prepare results (dates and forecast values)
         last_date = ts.index[-1]
         forecast_dates = pd.date_range(start=last_date + timedelta(days=1), periods=steps, freq='D')
-        forecast_result = [
-            {"date": str(d.date()), "profit": float(v)}
-            for d, v in zip(forecast_dates, ensemble_forecast)
-        ]
 
-        response = {
-            "ensemble_forecast": forecast_result,
-            "steps": steps,
-            "arima_forecast": [
-                {"date": str(d.date()), "profit": float(v)}
-                for d, v in zip(forecast_dates, forecast_arima)
-            ],
-            "prophet_forecast": [
-                {"date": str(d.date()), "profit": float(v)}
-                for d, v in zip(forecast_dates, forecast_prophet)
-            ]
-        }
-        return jsonify(response)
+        arima_result = [{"date": d.date().isoformat(), "profit": float(v)} for d, v in zip(forecast_dates, arima_forecast)]
+        sarima_result = [{"date": d.date().isoformat(), "profit": float(v)} for d, v in zip(forecast_dates, sarima_forecast)]
+        hybrid_result = [{"date": d.date().isoformat(), "profit": float(v)} for d, v in zip(forecast_dates, hybrid_forecast)]
+
+        return jsonify({
+            "arima_forecast": arima_result,
+            "sarima_forecast": sarima_result,
+            "hybrid_forecast": hybrid_result,
+            "steps": steps
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/analysis/trend', methods=['GET'])
 def trend_analysis():
-    """
-    Returns daily trend analysis data (aggregated profit by day).
-    """
     try:
         df = get_sales_df()
-        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].sum()
+        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].mean()
         ts = daily_profit.sort_index().reset_index()
         ts.columns = ['date', 'profit']
         ts['date'] = ts['date'].astype(str)
@@ -102,9 +78,6 @@ def trend_analysis():
 
 @app.route('/analysis/top-profit-products', methods=['GET'])
 def top_profit_products():
-    """
-    Returns top profit-making products (aggregated profit > 0).
-    """
     try:
         df = get_sales_df()
         grouped = df.groupby('item_name')['profit'].sum()
@@ -116,13 +89,11 @@ def top_profit_products():
 
 @app.route('/analysis/top-loss-products', methods=['GET'])
 def top_loss_products():
-    """
-    Returns top loss-making products (aggregated profit < 0).
-    """
     try:
         df = get_sales_df()
-        grouped = df.groupby('item_name')['profit'].sum()
-        result = grouped[grouped < 0].sort_values().reset_index()
+        loss_df = df[df['profit'] < 0]
+        grouped = loss_df.groupby('item_name')['profit'].sum()
+        result = grouped.sort_values(ascending=True).reset_index()
         data = result.to_dict(orient='records')
         return jsonify(data)
     except Exception as e:
@@ -130,9 +101,6 @@ def top_loss_products():
 
 @app.route('/analysis/top-customers', methods=['GET'])
 def top_customers():
-    """
-    Returns top customers by total profit.
-    """
     try:
         df = get_sales_df()
         grouped = df.groupby('buyer_name')['profit'].sum()
@@ -144,9 +112,6 @@ def top_customers():
 
 @app.route('/analysis/top-cashiers', methods=['GET'])
 def top_cashiers():
-    """
-    Returns top cashiers (by performance) based on total profit handled.
-    """
     try:
         df = get_sales_df()
         grouped = df.groupby('cashier_username')['profit'].sum()
