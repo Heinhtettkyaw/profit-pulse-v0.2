@@ -19,6 +19,7 @@ const CashierDashboard = () => {
         root.style.setProperty('--primary-bg', theme === 'light' ? '#f8f9fa' : '#1a1a1a');
         root.style.setProperty('--primary-text', theme === 'light' ? '#212529' : '#64ffda');
         root.style.setProperty('--accent-color', '#3B82F6');
+        root.style.setProperty('--j-color', theme === 'light' ? '#3B82F6' : '#f8f9fa');
         root.style.setProperty('--hover-color', theme === 'light' ? '#9ca3af' : '#1f2937');
         localStorage.setItem('theme', theme);
     }, [theme]);

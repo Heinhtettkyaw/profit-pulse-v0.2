@@ -3,14 +3,18 @@ import API from '../services/api';
 
 const SalesRecorder = () => {
     const [inventory, setInventory] = useState([]);
-    const [sale, setSale] = useState({
-        inventoryId: '',
-        quantitySold: 0,
-        soldPrice: 0,
+    const [saleItems, setSaleItems] = useState([]);
+    const [selectedItemId, setSelectedItemId] = useState('');
+    const [quantityToAdd, setQuantityToAdd] = useState(0);
+    const [soldPriceInput, setSoldPriceInput] = useState(0);
+    const [buyerDetails, setBuyerDetails] = useState({
         buyerName: '',
-        generalFee: 0,
+        generalFee: 0
     });
+    const [showReceipt, setShowReceipt] = useState(false);
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState(''); // 'success', 'warning', 'error'
+    const [receiptData, setReceiptData] = useState(null);
 
     useEffect(() => {
         fetchInventory();
@@ -25,164 +29,262 @@ const SalesRecorder = () => {
         }
     };
 
+    const handleAddItem = () => {
+        const selectedItem = inventory.find(i => i.id === parseInt(selectedItemId));
+        const quantity = parseInt(quantityToAdd, 10);
+        if (selectedItem && quantity > 0) {
+            if (quantity > selectedItem.quantity) {
+                setMessage(`Insufficient stock for ${selectedItem.itemName}. Available: ${selectedItem.quantity}`);
+                setMessageType('warning');
+                return;
+            }
+            setSaleItems([
+                ...saleItems,
+                {
+                    inventoryId: selectedItem.id,
+                    itemName: selectedItem.itemName, // capture item name for receipt
+                    quantitySold: quantity,
+                    soldPrice: soldPriceInput || selectedItem.originalPrice
+                }
+            ]);
+            setSelectedItemId('');
+            setQuantityToAdd(0);
+            setSoldPriceInput(0);
+            setMessage('');
+            setMessageType('');
+        }
+    };
+
     const handleRecordSale = async () => {
         try {
-            const selectedItem = inventory.find((item) => item.id === parseInt(sale.inventoryId));
-            if (!selectedItem) {
-                setMessage('Invalid inventory ID.');
-                return;
-            }
-            if (parseInt(sale.quantitySold) > selectedItem.quantity) {
-                setMessage(`Cannot sell more than available stock (${selectedItem.quantity}).`);
-                return;
-            }
-            await API.post('/cashier/sales/record', {
-                inventoryId: parseInt(sale.inventoryId),
-                quantitySold: parseInt(sale.quantitySold),
-                soldPrice: parseFloat(sale.soldPrice),
-                buyerName: sale.buyerName,
-                generalFee: parseFloat(sale.generalFee),
+            // Validate stock for all items
+            const invalidItems = saleItems.filter(item => {
+                const stock = inventory.find(i => i.id === item.inventoryId)?.quantity || 0;
+                return item.quantitySold > stock;
             });
+            if (invalidItems.length > 0) {
+                setMessage("Insufficient stock for item(s): " +
+                    invalidItems.map(i => i.inventoryId).join(', '));
+                setMessageType('warning');
+                return;
+            }
+
+            // Process each item individually
+            const salePromises = saleItems.map(item =>
+                API.post('/cashier/sales/record', {
+                    inventoryId: item.inventoryId,
+                    quantitySold: item.quantitySold,
+                    soldPrice: item.soldPrice,
+                    buyerName: buyerDetails.buyerName,
+                    generalFee: buyerDetails.generalFee
+                })
+            );
+
+            await Promise.all(salePromises);
+
+            // Capture sale details for the receipt before clearing sale state
+            setReceiptData({
+                saleItems: [...saleItems],
+                buyerDetails: { ...buyerDetails }
+            });
+
             setMessage('Sale recorded successfully!');
-            setSale({ inventoryId: '', quantitySold: 0, soldPrice: 0, buyerName: '', generalFee: 0 });
+            setMessageType('success');
+            setShowReceipt(true);
             fetchInventory();
         } catch (error) {
             console.error('Error recording sale:', error);
             setMessage('Error recording sale.');
+            setMessageType('error');
+        } finally {
+            setSaleItems([]);
+            setBuyerDetails({ buyerName: '', generalFee: 0 });
         }
     };
 
+    const calculateTotal = () => {
+        const subtotal = saleItems.reduce((sum, item) =>
+            sum + item.quantitySold * item.soldPrice, 0);
+        return subtotal + parseFloat(buyerDetails.generalFee);
+    };
+
+    const calculateReceiptTotal = () => {
+        if (!receiptData) return 0;
+        const subtotal = receiptData.saleItems.reduce((sum, item) =>
+            sum + item.quantitySold * item.soldPrice, 0);
+        return subtotal + parseFloat(receiptData.buyerDetails.generalFee);
+    };
+
+    // Determine message styling based on messageType
+    let messageStyle = "";
+    if (messageType === 'success') {
+        messageStyle = "bg-green-100 text-green-800";
+    } else if (messageType === 'warning') {
+        messageStyle = "bg-yellow-100 text-yellow-800";
+    } else if (messageType === 'error') {
+        messageStyle = "bg-red-100 text-red-800";
+    }
+
     return (
-        <div className="p-8 space-y-6">
-            <h3 className="text-3xl font-bold text-gray-800">Point of Sale</h3>
+        <div className="p-6">
             {message && (
-                <div className={`mt-4 p-4 rounded-lg ${message.includes('successful') ? 'bg-green-100' : 'bg-red-100'}`}>
-                    <p className={`font-medium ${message.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
-                        {message}
-                    </p>
+                <div className={`p-4 mb-4 rounded-lg ${messageStyle}`}>
+                    {message}
                 </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Left Column - Inventory List */}
-                <div className="bg-white shadow rounded-lg p-6">
-                    <h4 className="text-2xl font-semibold mb-4">Inventory</h4>
+                <div>
+                    <h2 className="text-2xl mb-4">Inventory</h2>
                     {inventory.length > 0 ? (
-                        <div className="space-y-4">
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full divide-y divide-gray-200">
-                                    <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody className="bg-white divide-y divide-gray-200">
-                                    {inventory.map((item) => (
-                                        <tr key={item.id} className="hover:bg-gray-50 transition">
-                                            <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{item.itemName}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">${item.originalPrice}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{item.quantity}</td>
-                                        </tr>
-                                    ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <table className="w-full border-collapse">
+                            <thead>
+                            <tr>
+                                <th className="px-4 py-2 border">ID</th>
+                                <th className="px-4 py-2 border">Item</th>
+                                <th className="px-4 py-2 border">Price</th>
+                                <th className="px-4 py-2 border">Stock</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {inventory.map(item => (
+                                <tr key={item.id}>
+                                    <td className="px-4 py-2 border">{item.id}</td>
+                                    <td className="px-4 py-2 border">{item.itemName}</td>
+                                    <td className="px-4 py-2 border">{item.originalPrice} MMK</td>
+                                    <td className="px-4 py-2 border">{item.quantity}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
                     ) : (
-                        <p className="text-gray-500 text-center">No inventory items available</p>
+                        <p>No inventory items available</p>
                     )}
                 </div>
 
                 {/* Right Column - Sale Form */}
-                <div className="bg-white shadow rounded-lg p-6">
-                    <h4 className="text-2xl font-semibold mb-6">Record Sale</h4>
+                <div>
+                    <h2 className="text-2xl mb-4">Record Sale</h2>
 
-                    <div className="space-y-4">
-                        {/* Product Selection */}
+                    {/* Product Selection */}
+                    <div className="mb-4">
+                        <label className="block mb-2">Product ID</label>
+                        <select
+                            value={selectedItemId}
+                            onChange={(e) => setSelectedItemId(e.target.value)}
+                            className="w-full px-4 py-2 border bg-[var(--primary-bg)] border-gray-300 rounded-lg focus:outline-none"
+                        >
+                            <option value="">Select Product</option>
+                            {inventory.map(item => (
+                                <option key={item.id} value={item.id}>
+                                    {item.id} - {item.itemName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Quantity and Price Inputs */}
+                    <div className="mb-4">
+                        <label className="block mb-2">Quantity</label>
+                        <input
+                            type="number"
+                            min="1"
+                            value={quantityToAdd}
+                            onChange={(e) => setQuantityToAdd(e.target.value)}
+                            className="w-full px-4 py-2 border bg-[var(--primary-bg)] border-gray-300 rounded-lg focus:outline-none"
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block mb-2">Unit Price</label>
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={soldPriceInput}
+                            onChange={(e) => setSoldPriceInput(e.target.value)}
+                            className="w-full px-4 py-2 border bg-[var(--primary-bg)] border-gray-300 rounded-lg focus:outline-none"
+                        />
+                    </div>
+
+                    {/* Add Item Button */}
+                    <button
+                        onClick={handleAddItem}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mb-4"
+                    >
+                        Add Item
+                    </button>
+
+                    {/* Added Items List */}
+                    {saleItems.length > 0 && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Product ID</label>
-                            <input
-                                type="number"
-                                value={sale.inventoryId}
-                                onChange={(e) => setSale({ ...sale, inventoryId: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                            <h3 className="text-lg mb-2">Added Items ({saleItems.length})</h3>
+                            <ul className="list-inside list-disc mb-4">
+                                {saleItems.map(item => (
+                                    <li key={item.inventoryId}>
+                                        {item.itemName}: {item.quantitySold} x {item.soldPrice} MMK
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
+                    )}
 
-                        {/* Quantity and Price */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-                                <input
-                                    type="number"
-                                    value={sale.quantitySold}
-                                    onChange={(e) => setSale({ ...sale, quantitySold: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Unit Price</label>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    value={sale.soldPrice}
-                                    onChange={(e) => setSale({ ...sale, soldPrice: e.target.value })}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                        </div>
+                    {/* Buyer Details */}
+                    <div className="mb-4">
+                        <label className="block mb-2">Buyer Name</label>
+                        <input
+                            type="text"
+                            value={buyerDetails.buyerName}
+                            onChange={(e) =>
+                                setBuyerDetails({
+                                    ...buyerDetails,
+                                    buyerName: e.target.value
+                                })
+                            }
+                            className="w-full px-4 py-2 border bg-[var(--primary-bg)] border-gray-300 rounded-lg focus:outline-none"
+                        />
+                    </div>
 
-                        {/* Buyer Details */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Buyer Name</label>
-                            <input
-                                type="text"
-                                value={sale.buyerName}
-                                onChange={(e) => setSale({ ...sale, buyerName: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
+                    {/* Service Fee */}
+                    <div className="mb-4">
+                        <label className="block mb-2">Service Fee</label>
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={buyerDetails.generalFee}
+                            onChange={(e) =>
+                                setBuyerDetails({
+                                    ...buyerDetails,
+                                    generalFee: e.target.value
+                                })
+                            }
+                            className="w-full px-4 py-2 border bg-[var(--primary-bg)] border-gray-300 rounded-lg focus:outline-none"
+                        />
+                    </div>
 
-                        {/* Fees */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Service Fee</label>
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={sale.generalFee}
-                                onChange={(e) => setSale({ ...sale, generalFee: e.target.value })}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
+                    {/* Total Preview */}
+                    <div className="bg-[var(--primary-bg)] p-4 rounded-lg">
+                        <p className="mb-2 font-semibold">
+                            Subtotal: {saleItems.reduce((sum, item) => sum + item.quantitySold * item.soldPrice, 0)} MMK
+                        </p>
+                        <p className="mb-2">Service Fee: {buyerDetails.generalFee} MMK</p>
+                        <hr className="my-2" />
+                        <p className="text-lg font-bold">Total: {calculateTotal()} MMK</p>
+                    </div>
 
-                        {/* Total Preview */}
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <div className="flex justify-between mb-2">
-                                <p className="text-gray-700">Subtotal</p>
-                                <p className="text-gray-700">
-                                    {Number(sale.soldPrice) * Number(sale.quantitySold)} MMK
-                                </p>
-
-                            </div>
-                            <div className="flex justify-between mb-2">
-                                <p className="text-gray-700">Service Fee</p>
-                                <p className="text-gray-700">{sale.generalFee} MMK</p>
-                            </div>
-                            <div className="flex justify-between font-semibold">
-                                <p>Total</p>
-                                <p>{Number(sale.soldPrice) * Number(sale.quantitySold) + Number(sale.generalFee)} MMK</p>
-
-                            </div>
-                        </div>
-
-                        {/* Action Button */}
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 mt-4">
+                        <button
+                            onClick={() => setSaleItems([])}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                        >
+                            Clear All
+                        </button>
                         <button
                             onClick={handleRecordSale}
-                            className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition duration-200"
+                            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
                         >
                             Confirm Sale
                         </button>
@@ -190,7 +292,35 @@ const SalesRecorder = () => {
                 </div>
             </div>
 
-
+            {/* Receipt Modal */}
+            {showReceipt && receiptData && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-lg font-semibold mb-4">Sales Receipt</h2>
+                        <ul>
+                            {receiptData.saleItems.map(item => (
+                                <li key={item.inventoryId}>
+                                    {item.itemName} - {item.quantitySold} x {item.soldPrice} MMK
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="mt-4">
+                            <p>Buyer: {receiptData.buyerDetails.buyerName}</p>
+                            <p>Service Fee: {receiptData.buyerDetails.generalFee} MMK</p>
+                            <p className="font-bold">Total: {calculateReceiptTotal()} MMK</p>
+                        </div>
+                        <button
+                            onClick={() => {
+                                setShowReceipt(false);
+                                setReceiptData(null);
+                            }}
+                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                        >
+                            Close Receipt
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

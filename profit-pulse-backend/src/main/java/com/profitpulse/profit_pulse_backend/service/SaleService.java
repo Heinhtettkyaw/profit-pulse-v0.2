@@ -44,10 +44,7 @@ public class SaleService {
 
         // Retrieve the supplier transaction record from Inventory.
         SupplierTransaction st = inventory.getSupplierTransaction();
-        // Compute the sale fee as 5% of the provided sold price.
-//        double saleFee = saleDTO.getSoldPrice() * 0.05;
-//        // Adjust the sold price by adding the fee.
-//        double adjustedSoldPrice = saleDTO.getSoldPrice() + saleFee;
+
 
         // Create a new Sale record capturing item details at sale time.
         Sale sale = new Sale();
