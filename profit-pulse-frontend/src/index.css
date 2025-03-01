@@ -14,3 +14,64 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+@layer base {
+  body {
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  body.light {
+    --tw-prose-body: rgba(33, 37, 41, 1);
+    --tw-prose-headings: rgba(33, 37, 41, 1);
+    --tw-prose-lead: rgba(33, 37, 41, 0.7);
+    --tw-prose-links: #667ae1;
+    --tw-prose-code: #e1e4e8;
+    --tw-prose-pre-border: #e1e4e8;
+    --tw-prose-borders: #e1e4e8;
+    --tw-prose-table-bg: #e1e4e8;
+    --tw-prose-invert-body: #f8f9fa;
+    --tw-prose-invert-headings: #f8f9fa;
+    --tw-prose-invert-lead: #f8f9fa;
+    --tw-prose-invert-links: #667ae1;
+    --tw-prose-invert-code: #2d3748;
+    --tw-prose-invert-pre-border: #2d3748;
+    --tw-prose-invert-borders: #2d3748;
+    --tw-prose-invert-table-bg: #2d3748;
+  }
+
+  body.dark {
+    --tw-prose-body: rgba(225, 228, 232, 1);
+    --tw-prose-headings: rgba(225, 228, 232, 1);
+    --tw-prose-lead: rgba(225, 228, 232, 0.7);
+    --tw-prose-links: #64ffda;
+    --tw-prose-code: #2d3748;
+    --tw-prose-pre-border: #2d3748;
+    --tw-prose-borders: #2d3748;
+    --tw-prose-table-bg: #2d3748;
+    --tw-prose-invert-body: #1a202c;
+    --tw-prose-invert-headings: #1a202c;
+    --tw-prose-invert-lead: #1a202c;
+    --tw-prose-invert-links: #64ffda;
+    --tw-prose-invert-code: #e1e4e8;
+    --tw-prose-invert-pre-border: #e1e4e8;
+    --tw-prose-invert-borders: #e1e4e8;
+    --tw-prose-invert-table-bg: #e1e4e8;
+  }
+}
+
+@layer base {
+  body {
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  body {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+  }
+
+
+
+  .dark {
+    --primary-bg: #1a1a1a;
+    --primary-text: #64ffda;
+  }
+}

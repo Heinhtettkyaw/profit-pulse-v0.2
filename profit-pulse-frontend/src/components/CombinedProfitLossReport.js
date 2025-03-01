@@ -85,21 +85,21 @@ const CombinedProfitLossReport = () => {
             {/* Search Inputs */}
             <div className="mb-6 space-y-2">
                 {/* Year Input */}
-                <label className="block text-sm font-medium text-gray-700">Year (e.g., 2023):</label>
+                <label className="block text-sm font-medium  text-[var(--j-color)]">Year (e.g., 2023):</label>
                 <input
                     type="number"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border  bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                 />
 
                 {/* Month Input */}
-                <label className="block text-sm font-medium text-gray-700">Month (1-12):</label>
+                <label className="block text-sm font-medium  text-[var(--j-color)]">Month (1-12):</label>
                 <input
                     type="number"
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    className="w-full px-4 py-2 border  bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                 />
 
                 {/* Buttons */}
@@ -126,31 +126,31 @@ const CombinedProfitLossReport = () => {
             <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-4">Profit Transactions</h3>
                 {profitTransactions.length > 0 ? (
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full border border-gray-300  bg-[var(--primary-bg)] shadow-md rounded-lg">
+                        <thead className=" bg-[var(--primary-bg)]">
                         <tr>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 ID
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Item Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Quantity Sold
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Sold Price
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Buyer Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Cashier
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Timestamp
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Profit
                             </th>
                         </tr>
@@ -162,25 +162,25 @@ const CombinedProfitLossReport = () => {
                             return (
                                 <tr
                                     key={sale.id}
-                                    className="hover:bg-gray-100 transition duration-300"
+                                    className="hover:bg-[var(--hover-color)] transition duration-300"
                                 >
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{sale.id}</td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{sale.id}</td>
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.itemName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.quantitySold}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.soldPrice}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.buyerName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.cashierUsername}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.timestamp
                                             ? new Date(sale.timestamp).toLocaleString()
                                             : ''}
@@ -204,31 +204,31 @@ const CombinedProfitLossReport = () => {
             <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-4">Loss Transactions</h3>
                 {lossTransactions.length > 0 ? (
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full border border-gray-300  bg-[var(--primary-bg)]  shadow-md rounded-lg">
+                        <thead className=" bg-[var(--primary-bg)] ">
                         <tr>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 ID
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Item Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Quantity Sold
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Sold Price
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Buyer Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Cashier
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Timestamp
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Loss
                             </th>
                         </tr>
@@ -240,25 +240,25 @@ const CombinedProfitLossReport = () => {
                             return (
                                 <tr
                                     key={sale.id}
-                                    className="hover:bg-gray-100 transition duration-300"
+                                    className="hover:bg-[var(--hover-color)] transition duration-300"
                                 >
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{sale.id}</td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{sale.id}</td>
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.itemName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.quantitySold}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.soldPrice}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.buyerName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.cashierUsername}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.timestamp
                                             ? new Date(sale.timestamp).toLocaleString()
                                             : ''}
@@ -287,6 +287,7 @@ const CombinedProfitLossReport = () => {
                         height={300}
                         data={monthlyBarData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="month" />
@@ -297,7 +298,7 @@ const CombinedProfitLossReport = () => {
                         <Bar dataKey="loss" fill="#e74c3c" name="Loss" />
                     </BarChart>
                 ) : (
-                    <p className="text-gray-500 text-center mt-4">No monthly bar chart data available.</p>
+                    <p className="text-red-600 text-center mt-4">No monthly bar chart data available.</p>
                 )}
             </div>
 

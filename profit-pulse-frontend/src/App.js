@@ -11,8 +11,6 @@ import ProfitLossReport from './components/ProfitLossReport';
 import CombinedProfitLossReport from './components/CombinedProfitLossReport';
 import ExtendedAnalysis from './components/ExtendedAnalysis';
 import AdminChangePassword from './components/AdminChangePassword';
-import Forecast from './components/Forecast';
-import TrendAnalysis from './components/TrendAnalysis';
 import ManageCashiers from './components/ManageCashiers';
 import ChangePassword from './components/ChangePassword';
 import { AuthContext } from './context/AuthContext';
@@ -37,7 +35,7 @@ function App() {
           <Route path="/admin/*" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
             <Route path="inventory" element={<InventoryManager />} />
             <Route path="profit-loss" element={<ProfitLossReport />} />
-            <Route path="combined-profit-loss" element={<CombinedProfitLossReport />} />
+            <Route path="combined-report" element={<CombinedProfitLossReport />} />
             {/*<Route path="profit-loss-page" element={<ProfitLossPage />} />*/}
             <Route path="sales-transactions" element={<TransactionList />} />
             <Route path="supplier-transactions" element={<SupplierTransactionList />} />

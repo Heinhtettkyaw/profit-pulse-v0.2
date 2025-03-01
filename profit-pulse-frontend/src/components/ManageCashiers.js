@@ -107,23 +107,25 @@ const ManageCashiers = () => {
                     <div className="mt-4">
                         <h4 className="text-lg font-semibold mb-2">Add New Cashier</h4>
                         <div className="flex items-center space-x-2">
+                            <label className="block text-sm font-medium  text-[var(--j-color)]">Username</label>
                             <input
                                 type="text"
-                                placeholder="Username"
+                                placeholder="Add new cashier's name"
                                 value={newCashier.username}
                                 onChange={(e) =>
                                     setNewCashier({ ...newCashier, username: e.target.value })
                                 }
-                                className="border border-gray-300 rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="border  bg-[var(--primary-bg)] rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
+                            <label className="block text-sm font-medium  text-[var(--j-color)]">Password</label>
                             <input
                                 type="password"
-                                placeholder="Password"
+                                placeholder="Password for cashier"
                                 value={newCashier.password}
                                 onChange={(e) =>
                                     setNewCashier({ ...newCashier, password: e.target.value })
                                 }
-                                className="border border-gray-300 rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                className="border border-gray-300 bg-[var(--primary-bg)] rounded-md px-2 py-1 w-48 focus:outline-none focus:ring-1 focus:ring-blue-500"
                             />
                             <button
                                 onClick={handleAddCashier}
@@ -139,7 +141,7 @@ const ManageCashiers = () => {
             {cashiers.length > 0 ? (
                 <table className="border-collapse border border-gray-300 w-full">
                     <thead>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-[var(--primary-bg)] ">
                         <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">Username</th>
                         <th className="border border-gray-300 px-4 py-2 text-left">Actions</th>
@@ -147,7 +149,7 @@ const ManageCashiers = () => {
                     </thead>
                     <tbody>
                     {cashiers.map((cashier) => (
-                        <tr key={cashier.id} className="hover:bg-gray-50">
+                        <tr key={cashier.id} className="hover:bg-[var(--hover-color)]">
                             <td className="border border-gray-300 px-4 py-2">{cashier.id}</td>
                             <td className="border border-gray-300 px-4 py-2">{cashier.username}</td>
                             <td className="border border-gray-300 px-4 py-2 flex space-x-2">

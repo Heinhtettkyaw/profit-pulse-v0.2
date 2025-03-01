@@ -50,7 +50,7 @@ const SupplierTransactionList = () => {
                     placeholder="Search by Supplier or Item Name"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="flex-grow px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 placeholder-gray-400 sm:w-auto"
+                    className="flex-grow px-4 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 placeholder-gray-400 sm:w-auto"
                 />
                 <button
                     onClick={searchTransactions}
@@ -74,28 +74,28 @@ const SupplierTransactionList = () => {
             {/* Transaction Table */}
             {transactions.length > 0 ? (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full border border-gray-300 bg-[var(--primary-bg)] shadow-md rounded-lg">
+                        <thead className="bg-[var(--primary-bg)]">
                         <tr>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 ID
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Item Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Quantity
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Original Price
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Supplier Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 General Fee
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Imported On
                             </th>
                         </tr>
@@ -104,15 +104,15 @@ const SupplierTransactionList = () => {
                         {transactions.map((item) => (
                             <tr
                                 key={item.id}
-                                className="hover:bg-gray-100 transition duration-300"
+                                className="hover:bg-[var(--hover-color)] transition duration-300"
                             >
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.id}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.itemName}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.quantity}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.originalPrice}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.supplierName}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">{item.generalFee}</td>
-                                <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.id}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.itemName}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.quantity}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.originalPrice}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.supplierName}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">{item.generalFee}</td>
+                                <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                     {item.importTimestamp
                                         ? new Date(item.importTimestamp).toLocaleString()
                                         : ''}

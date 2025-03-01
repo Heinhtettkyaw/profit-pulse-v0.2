@@ -1,94 +1,113 @@
-import React, { useContext } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { AuthContext } from '../context/AuthContext';
+
+export const ThemeContext = createContext();
 
 const AdminDashboard = () => {
     const { logoutUser } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+    const [theme, setTheme] = useState(() => {
+        const storedTheme = localStorage.getItem('theme');
+        return storedTheme || 'light';
+    });
 
-    const handleLogout = () => {
-        logoutUser();
-        navigate('/login', { replace: true });
+    useEffect(() => {
+        const root = document.documentElement;
+        root.style.setProperty('--primary-bg', theme === 'light' ? '#f8f9fa' : '#1a1a1a');
+        root.style.setProperty('--primary-text', theme === 'light' ? '#212529' : '#64ffda');
+        root.style.setProperty('--accent-color', '#3B82F6');
+        root.style.setProperty('--j-color', theme === 'light' ? '#3B82F6' : '#f8f9fa');
+        root.style.setProperty('--hover-color', theme === 'light' ? '#9ca3af' : '#1f2937');
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
     };
 
+    const routes = [
+        { name: "Manage Inventory", to: "inventory" },
+        { name: "Profit & Loss Reports", to: "profit-loss" },
+        { name: "Sales Transactions", to: "sales-transactions" },
+        { name: "Supplier Transactions", to: "supplier-transactions" },
+        { name: "Profit Loss Details", to: "combined-report" },
+        { name: "Manage Cashiers", to: "manage-cashiers" },
+        { name: "Change Password", to: "change-password" },
+        { name: "Extended Analysis", to: "extended-analysis" }
+    ];
+
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-            <nav className="flex items-center space-x-2 bg-gray-100 p-2 rounded mb-4">
-                <Link
-                    to="inventory"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
+        <ThemeContext.Provider value={{ theme }}>
+            <div
+                className="min-h-screen flex overflow-hidden bg-[var(--primary-bg)] text-[var(--primary-text)] transition-all"
+            >
+                {/* Responsive Sidebar */}
+                <nav
+                    className={`w-64 px-4 py-8 bg-[var(--primary-bg)] shadow-lg lg:block lg:fixed lg:top-0 lg:left-0 lg:h-screen transition-all`}
                 >
-                    Manage Inventory
-                </Link>
-                <Link
-                    to="profit-loss"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Profit & Loss Reports
-                </Link>
-                <Link
-                    to="sales-transactions"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Sales Transactions
-                </Link>
-                <Link
-                    to="supplier-transactions"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Supplier Transactions
-                </Link>
-                <Link
-                    to="combined-profit-loss"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Profit Loss Details
-                </Link>
-                <Link
-                    to="manage-cashiers"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Manage Cashiers
-                </Link>
-                <Link
-                    to="change-password"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Change Password
-                </Link>
-                {/*<Link*/}
-                {/*    to="forecast"*/}
-                {/*    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"*/}
-                {/*>*/}
-                {/*    Forecast*/}
-                {/*</Link>*/}
-                {/*<Link*/}
-                {/*    to="trend"*/}
-                {/*    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"*/}
-                {/*>*/}
-                {/*    Trend Analysis*/}
-                {/*</Link>*/}
-                <Link
-                    to="extended-analysis"
-                    className="px-4 py-2 bg-white rounded hover:bg-gray-200 text-blue-500 hover:text-blue-700 transition duration-300"
-                >
-                    Extended Analysis
-                </Link>
+                    <div className="flex items-center justify-center mb-8">
+                        <h1 className="text-2xl font-bold text-[var(--primary-text)]">
+                            Admin <span className="text-[var(--accent-color)]">Dashboard</span>
+                        </h1>
+                    </div>
+                    <div className="space-y-4">
+                        {routes.map((route) => (
+                            <Link
+                                key={route.to}
+                                to={route.to}
+                                className={`block px-4 py-3 rounded-lg transition duration-100 
+                                ${pathname.includes(route.to)
+                                    ? 'bg-[var(--accent-color)] text-white font-semibold'
+                                    : 'hover:bg-[var(--accent-color)/30%] text-[var(--primary-text)]'
+                                }`}
+                            >
+                                {route.name}
+                            </Link>
+                        ))}
+                    </div>
+                </nav>
 
-                <div className="absolute right-10 flex justify-between ">
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 text-white px-4 py-2  rounded hover:bg-red-600 focus:outline-none "
-                    >
-                        Logout
-                    </button>
+                {/* Main Content */}
+                <div className="ml-64 pt-16 px-6 lg:ml-64 md:ml-0 md:pt-8 md:px-4 grow min-w-0">
+                    <header className="flex items-center justify-between mb-6 border-b border-[var(--hover-color)] pb-4">
+                        <h2 className="text-2xl font-bold">Admin Interface</h2>
+                        <div className="flex items-center space-x-4">
+                            {/* Theme Toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full
+                                bg-[var(--primary-bg)]
+                                hover:bg-[var(--accent-color)/20%]
+                                transition"
+                            >
+                                {theme === 'light' ? (
+                                    <SunIcon className="h-6 w-6 text-[var(--primary-text)]" />
+                                ) : (
+                                    <MoonIcon className="h-6 w-6 text-[var(--primary-text)]" />
+                                )}
+                            </button>
+                            {/* Logout Button */}
+                            <button
+                                onClick={() => logoutUser(navigate)}
+                                className="bg-red-600
+                                text-white px-6 py-3 rounded-full
+                                shadow-lg transition duration-300
+                                hover:bg-red-700"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    </header>
+
+                    <div className="max-w-full mx-0 min-h-[calc(100vh-16rem)] pb-10">
+                        <Outlet />
+                    </div>
                 </div>
-            </nav>
-
-            <hr className="my-4"/>
-            <Outlet/>
-        </div>
+            </div>
+        </ThemeContext.Provider>
     );
 };
 

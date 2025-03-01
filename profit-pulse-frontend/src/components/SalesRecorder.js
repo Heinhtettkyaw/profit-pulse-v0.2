@@ -1,4 +1,3 @@
-// src/components/SalesRecorder.js
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 
@@ -24,10 +23,6 @@ const SalesRecorder = () => {
         } catch (error) {
             console.error('Error fetching inventory:', error);
         }
-    };
-
-    const handleChange = (e) => {
-        setSale({ ...sale, [e.target.name]: e.target.value });
     };
 
     const handleRecordSale = async () => {
@@ -58,110 +53,144 @@ const SalesRecorder = () => {
     };
 
     return (
-        <div className="p-4">
-            <h3 className="text-2xl font-bold mb-4">Sales Recorder</h3>
+        <div className="p-8 space-y-6">
+            <h3 className="text-3xl font-bold text-gray-800">Point of Sale</h3>
             {message && (
-                <p
-                    className={`mb-4 ${
-                        message.includes('successful') ? 'text-green-500' : 'text-red-500'
-                    }`}
-                >
-                    {message}
-                </p>
+                <div className={`mt-4 p-4 rounded-lg ${message.includes('successful') ? 'bg-green-100' : 'bg-red-100'}`}>
+                    <p className={`font-medium ${message.includes('successful') ? 'text-green-600' : 'text-red-600'}`}>
+                        {message}
+                    </p>
+                </div>
             )}
-            <div className="flex space-x-6">
-                {/* Available Inventory Section */}
-                <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-2">Available Inventory</h4>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Left Column - Inventory List */}
+                <div className="bg-white shadow rounded-lg p-6">
+                    <h4 className="text-2xl font-semibold mb-4">Inventory</h4>
                     {inventory.length > 0 ? (
-                        <table className="border-collapse border border-gray-300 w-full">
-                            <thead className="bg-gray-100">
-                            <tr>
-                                <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left">Item Name</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left">Original Price</th>
-                                <th className="border border-gray-300 px-4 py-2 text-left">In-Stock</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {inventory.map((item) => (
-                                <tr key={item.id} className="hover:bg-gray-50">
-                                    <td className="border border-gray-300 px-4 py-2">{item.id}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{item.itemName}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{item.originalPrice}</td>
-                                    <td className="border border-gray-300 px-4 py-2">{item.quantity}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                        <div className="space-y-4">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                    {inventory.map((item) => (
+                                        <tr key={item.id} className="hover:bg-gray-50 transition">
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.id}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.itemName}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">${item.originalPrice}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.quantity}</td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     ) : (
-                        <p className="text-gray-500">No inventory items available.</p>
+                        <p className="text-gray-500 text-center">No inventory items available</p>
                     )}
                 </div>
 
-                {/* Record Sale Section */}
-                <div className="flex-1">
-                    <h4 className="text-lg font-semibold mb-2">Record a Sale</h4>
+                {/* Right Column - Sale Form */}
+                <div className="bg-white shadow rounded-lg p-6">
+                    <h4 className="text-2xl font-semibold mb-6">Record Sale</h4>
+
                     <div className="space-y-4">
+                        {/* Product Selection */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Inventory ID</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Product ID</label>
                             <input
                                 type="number"
-                                name="inventoryId"
                                 value={sale.inventoryId}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                onChange={(e) => setSale({ ...sale, inventoryId: e.target.value })}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity Sold</label>
-                            <input
-                                type="number"
-                                name="quantitySold"
-                                value={sale.quantitySold}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            />
+
+                        {/* Quantity and Price */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+                                <input
+                                    type="number"
+                                    value={sale.quantitySold}
+                                    onChange={(e) => setSale({ ...sale, quantitySold: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Unit Price</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    value={sale.soldPrice}
+                                    onChange={(e) => setSale({ ...sale, soldPrice: e.target.value })}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
                         </div>
+
+                        {/* Buyer Details */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Sold Price Per Each Item</label>
-                            <input
-                                type="number"
-                                name="soldPrice"
-                                value={sale.soldPrice}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Buyer Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Buyer Name</label>
                             <input
                                 type="text"
-                                name="buyerName"
                                 value={sale.buyerName}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                onChange={(e) => setSale({ ...sale, buyerName: e.target.value })}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
+
+                        {/* Fees */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Service Fee</label>
                             <input
                                 type="number"
-                                name="generalFee"
+                                step="0.01"
                                 value={sale.generalFee}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                onChange={(e) => setSale({ ...sale, generalFee: e.target.value })}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
+
+                        {/* Total Preview */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                            <div className="flex justify-between mb-2">
+                                <p className="text-gray-700">Subtotal</p>
+                                <p className="text-gray-700">
+                                    {Number(sale.soldPrice) * Number(sale.quantitySold)} MMK
+                                </p>
+
+                            </div>
+                            <div className="flex justify-between mb-2">
+                                <p className="text-gray-700">Service Fee</p>
+                                <p className="text-gray-700">{sale.generalFee} MMK</p>
+                            </div>
+                            <div className="flex justify-between font-semibold">
+                                <p>Total</p>
+                                <p>{Number(sale.soldPrice) * Number(sale.quantitySold) + Number(sale.generalFee)} MMK</p>
+
+                            </div>
+                        </div>
+
+                        {/* Action Button */}
                         <button
                             onClick={handleRecordSale}
-                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none"
+                            className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition duration-200"
                         >
-                            Record Sale
+                            Confirm Sale
                         </button>
                     </div>
                 </div>
             </div>
+
+
         </div>
     );
 };

@@ -93,9 +93,9 @@ const ExtendedAnalysis = () => {
         };
 
         return (
-            <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                <h2 className="text-2xl font-bold text-gray-800 mb-8">{title}</h2>
-                <div className="flex flex-col lg:flex-row gap-12 items-center justify-center">
+            <div className=" p-8 rounded-2xl shadow-xl border border-gray-100">
+                <h2 className="text-2xl font-bold text-[var(--primary-text)] mb-8">{title}</h2>
+                <div className="flex flex-col lg:flex-row bg-[var(--primary-bg)] text-[var(--primary-text)] gap-12 items-center justify-center">
                     <div className="relative">
                         <PieChart width={500} height={400}>
                             <Pie
@@ -109,6 +109,7 @@ const ExtendedAnalysis = () => {
                                 paddingAngle={2}
                                 label={renderCustomizedLabel}
                                 labelLine={false}
+
                             >
                                 {chartDataForPie.map((_, index) => (
                                     <Cell
@@ -123,7 +124,7 @@ const ExtendedAnalysis = () => {
                                 y="50%"
                                 textAnchor="middle"
                                 dominantBaseline="middle"
-                                className="text-2xl font-bold text-gray-600"
+                                className="text-2xl font-bold fill-[var(--primary-text)] "
                             >
                                 {isLoss ? 'Loss' : 'Profit'}
                             </text>
@@ -131,19 +132,19 @@ const ExtendedAnalysis = () => {
                     </div>
 
                     <div className="w-full max-w-xl">
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="bg-[var(--primary-bg)] rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                             <table className="w-full">
-                                <thead className="bg-gray-50">
+                                <thead className="bg-[var(--primary-bg)]">
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Item</th>
-                                    <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">Value</th>
+                                    <th className="px-6 py-4 text-left text-sm font-semibold text-[var(--primary-text)]">Item</th>
+                                    <th className="px-6 py-4 text-right text-sm font-semibold text-[var(--primary-text)]">Value</th>
                                 </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                 {chartData.map((item, index) => (
                                     <tr
                                         key={index}
-                                        className="hover:bg-gray-50 transition-colors"
+                                        className="hover:bg-[var(--hover-color)] transition-colors"
                                     >
                                         <td className="px-6 py-4">
                                             <div className="flex items-center">
@@ -151,19 +152,19 @@ const ExtendedAnalysis = () => {
                                                     className="w-3 h-3 rounded-full mr-3 shadow-sm"
                                                     style={{ backgroundColor: COLORS[index % COLORS.length] }}
                                                 />
-                                                <span className="text-sm font-medium text-gray-700">
+                                                <span className="text-sm font-medium text-[var(--primary-text)]">
                                                         {item[nameKey]}
                                                     </span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                                        <td className="px-6 py-4 text-right text-sm font-medium text-[var(--primary-text)]">
+                                                <span className={`inline-block px-3 py-1  rounded-full text-sm font-medium ${
                                                     item[valueKey] < 0
                                                         ? 'bg-red-100 text-red-700'
                                                         : 'bg-green-100 text-green-700'
                                                 }`}>
                                                     {item[valueKey] < 0 ? '-' : '+'}
-                                                    ${Math.abs(item[valueKey]).toFixed(2)}
+                                                    {Math.abs(item[valueKey]).toFixed(2)}
                                                 </span>
                                         </td>
                                     </tr>
@@ -181,16 +182,16 @@ const ExtendedAnalysis = () => {
         switch (analysisType) {
             case 'dailyForecast':
                 return (
-                    <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                    <div className="bg-[var(--primary-bg)] p-8 rounded-2xl shadow-xl border border-gray-100">
                         <div className="flex flex-col md:flex-row gap-8 mb-8">
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-3">
+                                <label className="block text-sm font-medium text-[var(--primary-text)]-700 mb-3">
                                     Forecast Type
                                 </label>
                                 <select
                                     value={forecastType}
                                     onChange={(e) => setForecastType(e.target.value)}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="w-full px-4 py-2.5 border border-gray-300 bg-[var(--primary-bg)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 >
                                     <option value="arima">ARIMA Trend</option>
                                     <option value="sarima">SARIMAX Seasonality</option>
@@ -198,14 +199,14 @@ const ExtendedAnalysis = () => {
                                 </select>
                             </div>
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-3">
+                                <label className="block text-sm font-medium text-[var(--primary-text)]-700 mb-3">
                                     Forecast Days
                                 </label>
                                 <input
                                     type="number"
                                     value={steps}
                                     onChange={(e) => setSteps(Math.max(1, e.target.value))}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="w-full px-4 py-2.5 border border-gray-300 bg-[var(--primary-bg)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 />
                             </div>
                         </div>
@@ -236,7 +237,7 @@ const ExtendedAnalysis = () => {
                                     <Legend
                                         wrapperStyle={{ paddingTop: '20px' }}
                                         formatter={(value) => (
-                                            <span className="text-gray-700 font-medium">{value}</span>
+                                            <span className="text-[var(--primary-text)] font-medium">{value}</span>
                                         )}
                                     />
                                     <Line
@@ -251,7 +252,7 @@ const ExtendedAnalysis = () => {
                             </div>
                         ) : (
                             <div className="text-center py-12">
-                                <p className="text-gray-500 text-lg">No forecast data available</p>
+                                <p className="text-[var(--primary-text)]-500 text-lg">No forecast data available</p>
                             </div>
                         )}
                     </div>
@@ -259,8 +260,8 @@ const ExtendedAnalysis = () => {
 
             case 'trend':
                 return (
-                    <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-8">Historical Trend</h2>
+                    <div className="bg-[var(--primary-bg)] p-8 rounded-2xl shadow-xl border border-gray-100">
+                        <h2 className="text-2xl font-bold text-[var(--primary-text)]-800 mb-8">Historical Trend</h2>
                         {data.length > 0 ? (
                             <div className="border border-gray-200 rounded-xl p-4">
                                 <LineChart
@@ -296,7 +297,7 @@ const ExtendedAnalysis = () => {
                             </div>
                         ) : (
                             <div className="text-center py-12">
-                                <p className="text-gray-500 text-lg">No trend data available</p>
+                                <p className="text-[var(--primary-text)]-500 text-lg">No trend data available</p>
                             </div>
                         )}
                     </div>
@@ -304,7 +305,7 @@ const ExtendedAnalysis = () => {
 
             default:
                 return (
-                    <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+                    <div className="bg-[var(--primary-bg)] p-8 rounded-2xl shadow-xl border border-gray-100">
                         {renderDonutAndTable(
                             data,
                             analysisType === 'topProfitProducts' || analysisType === 'topLossProducts'
@@ -328,15 +329,15 @@ const ExtendedAnalysis = () => {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">ProfitPulse Analytics</h1>
-                        <p className="text-gray-600 mt-2">Advanced business performance insights</p>
+                        <h1 className="text-3xl font-bold text-[var(--primary-text)]">ProfitPulse Analytics</h1>
+                        <p className="text-[var(--primary-text)]-600 mt-2">Advanced business performance insights</p>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <select
                             value={analysisType}
                             onChange={(e) => setAnalysisType(e.target.value)}
-                            className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="px-4 py-2.5 border border-gray-300 bg-[var(--primary-bg)] rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         >
                             <option value="dailyForecast">Sales Forecast</option>
                             <option value="trend">Historical Trend</option>

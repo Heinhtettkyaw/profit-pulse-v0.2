@@ -50,7 +50,7 @@ const TransactionList = () => {
                     placeholder="Search by Buyer or Item Name"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="flex-grow px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 placeholder-gray-400 sm:w-auto"
+                    className="flex-grow px-4 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 placeholder-gray-400 sm:w-auto"
                 />
                 <button
                     onClick={searchTransactions}
@@ -74,31 +74,31 @@ const TransactionList = () => {
             {/* Transaction Table */}
             {transactions.length > 0 ? (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full border border-gray-300 bg-[var(--primary-bg)] shadow-md rounded-lg">
+                        <thead className="bg-[var(--primary-bg)] ">
                         <tr>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 ID
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Item Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Quantity Sold
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Sold Price
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Buyer Name
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Cashier
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Timestamp
                             </th>
-                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">
+                            <th className="border-b border-gray-300 px-4 py-2 text-left font-semibold text-[var(--primary-text)]">
                                 Profit
                             </th>
                         </tr>
@@ -110,27 +110,27 @@ const TransactionList = () => {
                             return (
                                 <tr
                                     key={sale.id}
-                                    className="hover:bg-gray-100 transition duration-300"
+                                    className="hover:bg-[var(--hover-color)] transition duration-300"
                                 >
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.id}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.itemName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.quantitySold}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.soldPrice}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.buyerName}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.cashierUsername}
                                     </td>
-                                    <td className="border-b border-gray-200 px-4 py-2 text-gray-700">
+                                    <td className="border-b border-gray-200 px-4 py-2 text-[var(--primary-text)]">
                                         {sale.timestamp
                                             ? new Date(sale.timestamp).toLocaleString()
                                             : ''}

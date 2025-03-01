@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../services/api';
-
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell } from 'recharts';
 const ProfitLossReport = () => {
     const [report, setReport] = useState(null);
     const [year, setYear] = useState('');
@@ -18,8 +18,9 @@ const ProfitLossReport = () => {
         }
     };
 
+
     const fetchMonthlyReport = async () => {
-        if (year.trim() === '' || month.trim() === '') {
+        if (!year || !month) {
             setMessage('Please enter both year and month.');
             return;
         }
@@ -39,31 +40,30 @@ const ProfitLossReport = () => {
         fetchOverallReport();
     }, []);
 
+    const formatCurrency = (value) =>
+        `$${parseFloat(value).toLocaleString('en-US')}`;
+
     return (
         <div className="p-6">
-            <h3 className="text-xl font-bold mb-4">Overall Profit & Loss Report</h3>
+            <h3 className="text-xl font-bold mb-4">Profit & Loss Report</h3>
 
-            {/* Search Inputs */}
             <div className="mb-6 flex flex-wrap items-center space-x-2">
-                {/* Year Label and Input */}
-                <label className="block text-sm font-medium text-gray-700 mr-2">Year (e.g., 2023):</label>
+                <label className="text-sm font-medium text-[var(--j-color)] mr-2">Year (e.g., 2023):</label>
                 <input
                     type="number"
                     value={year}
                     onChange={(e) => setYear(e.target.value)}
-                    className="w-40 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-24"
+                    className="w-40 px-3 py-1 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                 />
 
-                {/* Month Label and Input */}
-                <label className="block text-sm font-medium text-gray-700 ml-2 mr-2">Month (1-12):</label>
+                <label className="text-sm font-medium text-[var(--j-color)] ml-2 mr-2">Month (1-12):</label>
                 <input
                     type="number"
                     value={month}
                     onChange={(e) => setMonth(e.target.value)}
-                    className="w-40 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500 w-16"
+                    className="w-40 px-3 py-1 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 w-16"
                 />
 
-                {/* Buttons */}
                 <button
                     onClick={fetchMonthlyReport}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
@@ -78,36 +78,113 @@ const ProfitLossReport = () => {
                 </button>
             </div>
 
-            {/* Message Display */}
-            {message && <p className="text-red-500 mb-4">{message}</p>}
-
-            {/* Report Table */}
-            {report ? (
-                <div className="mt-6">
-                    <table className="min-w-full border border-gray-300">
-                        <thead className="bg-gray-200">
-                        <tr>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Total Investment Value</th>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Total Sale Value</th>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Overall Profit</th>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Total Profit (Profitable Sales)</th>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Total Loss (Loss-making Sales)</th>
-                            <th className="border border-gray-300 px-4 py-2 text-left">Total Inventory Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr className="hover:bg-gray-100">
-                            <td className="border border-gray-300 px-4 py-2">{report.totalInvestmentValue}</td>
-                            <td className="border border-gray-300 px-4 py-2">{report.totalSaleValue}</td>
-                            <td className="border border-gray-300 px-4 py-2">{report.overallProfit}</td>
-                            <td className="border border-gray-300 px-4 py-2">{report.profitOnly}</td>
-                            <td className="border border-gray-300 px-4 py-2">{report.lossOnly}</td>
-                            <td className="border border-gray-300 px-4 py-2">{report.totalInventoryValue}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+            {message && (
+                <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+                    {message}
                 </div>
-            ) : (
+            )}
+
+            {report && (
+                <div className="space-y-8">
+                    <div className=" bg-[var(--primary-bg)] p-4 rounded shadow">
+                        <h4 className="text-lg font-semibold mb-4">Key Insights</h4>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Total Investment Value</p>
+                                <p className="text-xl font-bold text-green-500 mt-3">${report.totalInvestmentValue}</p>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Total Sale Value</p>
+                                <p className="text-xl font-bold text-green-500 mt-3">${report.totalSaleValue}</p>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Total Profit</p>
+                                <p className="text-xl font-bold text-green-500 mt-3">${report.profitOnly}</p>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Total Loss</p>
+                                <p className="text-xl font-bold text-red-500 mt-3">-${report.lossOnly}</p>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Inventory Value</p>
+                                <p className="text-xl font-bold text-green-500 mt-3">${report.totalInventoryValue}</p>
+                            </div>
+                            <div>
+                                <p className="text-xl font-bold text-[var(--j-color)]">Overall Profit</p>
+                                <p className={`text-xl font-bold mt-3 ${report.overallProfit > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    {report.overallProfit >= 0 ? '+' : '-'}${Math.abs(report.overallProfit).toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-[var(--primary-bg)] p-4 rounded shadow">
+                        <h4 className="text-lg font-semibold mb-4">Detailed Breakdown</h4>
+                        <div className="flex items-center space-x-4">
+                            <div className="w-1/2">
+                                <h5 className="text-md font-medium mb-2">Profit Distribution</h5>
+                                <div className="h-40">
+
+                                    {/*<BarChart width={200} height={200} data={[{name: 'Profit', value: report.profitOnly}, {name: 'Loss', value: report.lossOnly}]}>*/}
+                                    {/*    <CartesianGrid stroke="#eee" />*/}
+                                    {/*    <XAxis dataKey="name" />*/}
+                                    {/*    <YAxis />*/}
+                                    {/*    <Tooltip />*/}
+                                    {/*    <Bar dataKey="value" fill={report.overallProfit >= 0 ? '#82ca9d' : '#ef4444'} />*/}
+                                    {/*</BarChart>*/}
+                                    <BarChart
+                                        width={200}
+                                        height={200}
+                                        data={[
+                                            { name: 'Profit', value: report.profitOnly },
+                                            { name: 'Loss', value: report.lossOnly },
+                                        ]}
+                                    >
+                                        <CartesianGrid stroke="#eee" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Bar dataKey="value">
+                                            {[
+                                                { name: 'Profit', value: report.profitOnly },
+                                                { name: 'Loss', value: report.lossOnly },
+                                            ].map((entry, index) => (
+                                                <Cell
+                                                    key={`cell-${index}`}
+                                                    fill={entry.name === 'Profit' ? '#28a745' : '#ef4444'}
+                                                />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+
+
+                                </div>
+                            </div>
+                            <div className="w-1/2">
+                                <h5 className="text-md font-bold mb-2">Financial Summary</h5>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-[var(--j-color)]">Total Investment</span>
+                                        <span className="font-medium text-green-500">${report.totalInvestmentValue}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[var(--j-color)]">Total Sales</span>
+                                        <span className={`font-medium ${report.totalSaleValue > report.totalInvestmentValue ? 'text-green-500' : 'text-red-500'}`}>
+                                            ${report.totalSaleValue}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[var(--j-color)]">Inventory Value</span>
+                                        <span className="font-medium text-green-500">${report.totalInventoryValue}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {!report && !message && (
                 <p className="text-gray-500 mt-6">Loading report...</p>
             )}
         </div>

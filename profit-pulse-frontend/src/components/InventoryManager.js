@@ -3,7 +3,7 @@ import API from '../services/api';
 
 const InventoryManager = () => {
     const [inventory, setInventory] = useState([]);
-    const [newItem, setNewItem] = useState({ itemName: '', quantity: 0, originalPrice: 0, supplierName: '', generalFee: 0 });
+    const [newItem, setNewItem] = useState({ itemName: '', quantity:'', originalPrice:'', supplierName: '', generalFee: 0 });
     const [message, setMessage] = useState('');
     const [editItem, setEditItem] = useState(null);
     const [showAddForm, setShowAddForm] = useState(false); // State to control form visibility
@@ -83,24 +83,24 @@ const InventoryManager = () => {
 
             {/* Add New Item Section (Toggleable) */}
             {showAddForm && (
-                <div className="mb-6 bg-gray-100 p-4 rounded shadow-md">
+                <div className="mb-6 bg-[var(--primary-bg)]  p-4 rounded shadow-md">
                     <h4 className="text-lg font-semibold mb-2">Add New Item</h4>
                     <div className="grid grid-cols-2 gap-4">
                         {/* Item Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                            <label className="block text-sm font-medium  text-[var(--primary-text)] mb-1">Item Name</label>
                             <input
                                 type="text"
                                 value={newItem.itemName}
                                 onChange={(e) =>
                                     setNewItem({ ...newItem, itemName: e.target.value })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                className="w-full px-3 py-2 border  bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                             />
                         </div>
                         {/* Quantity */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Quantity</label>
                             <input
                                 type="number"
                                 value={newItem.quantity}
@@ -110,12 +110,12 @@ const InventoryManager = () => {
                                         quantity: parseInt(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border  bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Original Price */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Original Price</label>
                             <input
                                 type="number"
                                 value={newItem.originalPrice}
@@ -125,24 +125,24 @@ const InventoryManager = () => {
                                         originalPrice: parseFloat(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Supplier Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Supplier Name</label>
                             <input
                                 type="text"
                                 value={newItem.supplierName}
                                 onChange={(e) =>
                                     setNewItem({ ...newItem, supplierName: e.target.value })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                             />
                         </div>
                         {/* General Fee */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">General Fee</label>
                             <input
                                 type="number"
                                 value={newItem.generalFee}
@@ -152,7 +152,7 @@ const InventoryManager = () => {
                                         generalFee: parseFloat(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Add Item Button */}
@@ -176,24 +176,24 @@ const InventoryManager = () => {
 
             {/* Edit Item Section */}
             {editItem && (
-                <div className="mb-6 bg-gray-100 p-4 rounded shadow-md">
+                <div className="mb-6  bg-[var(--primary-bg)] p-4 rounded shadow-md ">
                     <h4 className="text-lg font-semibold mb-2">Edit Item</h4>
                     <div className="grid grid-cols-2 gap-4">
                         {/* Item Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Item Name</label>
                             <input
                                 type="text"
                                 value={editItem.itemName}
                                 onChange={(e) =>
                                     setEditItem({ ...editItem, itemName: e.target.value })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                             />
                         </div>
                         {/* Quantity */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Quantity</label>
                             <input
                                 type="number"
                                 value={editItem.quantity}
@@ -203,12 +203,12 @@ const InventoryManager = () => {
                                         quantity: parseInt(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Original Price */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Original Price</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Original Price</label>
                             <input
                                 type="number"
                                 value={editItem.originalPrice}
@@ -218,24 +218,24 @@ const InventoryManager = () => {
                                         originalPrice: parseFloat(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Supplier Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Supplier Name</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">Supplier Name</label>
                             <input
                                 type="text"
                                 value={editItem.supplierName}
                                 onChange={(e) =>
                                     setEditItem({ ...editItem, supplierName: e.target.value })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500"
                             />
                         </div>
                         {/* General Fee */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">General Fee</label>
+                            <label className="block text-sm font-medium text-[var(--primary-text)] mb-1">General Fee</label>
                             <input
                                 type="number"
                                 value={editItem.generalFee}
@@ -245,7 +245,7 @@ const InventoryManager = () => {
                                         generalFee: parseFloat(e.target.value) || 0,
                                     })
                                 }
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 appearance-none"
+                                className="w-full px-3 py-2 border bg-[var(--primary-bg)] rounded focus:outline-none focus:border-blue-500 appearance-none"
                             />
                         </div>
                         {/* Update and Cancel Buttons */}
@@ -270,20 +270,20 @@ const InventoryManager = () => {
             {/* Inventory List Section */}
             <h4 className="text-lg font-semibold mb-2">Inventory List</h4>
             {inventory.length > 0 ? (
-                <table className="min-w-full border border-gray-300">
-                    <thead className="bg-gray-200">
+                <table className="min-w-full border  bg-[var(--primary-bg)]">
+                    <thead className="">
                     <tr>
-                        <th className="border border-gray-300 px-4 py-2">Item Name</th>
-                        <th className="border border-gray-300 px-4 py-2">Quantity</th>
-                        <th className="border border-gray-300 px-4 py-2">Original Price</th>
-                        <th className="border border-gray-300 px-4 py-2">Supplier Name</th>
-                        <th className="border border-gray-300 px-4 py-2">Imported On</th>
-                        <th className="border border-gray-300 px-4 py-2">Actions</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Item Name</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Quantity</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Original Price</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Supplier Name</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Imported On</th>
+                        <th className="border  bg-[var(--primary-bg)] px-4 py-2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {inventory.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-100">
+                        <tr key={item.id} className="hover: bg-[var(--primary-bg)]">
                             <td className="border border-gray-300 px-4 py-2">{item.itemName}</td>
                             <td className="border border-gray-300 px-4 py-2">{item.quantity}</td>
                             <td className="border border-gray-300 px-4 py-2">{item.originalPrice}</td>
