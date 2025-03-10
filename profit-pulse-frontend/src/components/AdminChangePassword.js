@@ -29,7 +29,6 @@ const AdminChangePassword = () => {
             setMessage(error.response?.data || 'Error changing password.');
         }
     };
-
     return (
         <div className="p-6 max-w-md  bg-[var(--primary-bg)] rounded-lg shadow-md">
             {/* Header */}

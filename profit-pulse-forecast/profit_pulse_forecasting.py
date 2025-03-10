@@ -31,7 +31,7 @@ def forecast_profit():
         ts = ts.asfreq('D').fillna(0)
 
         # ARIMA model for trend component (with differencing)
-        arima_model = ARIMA(ts, order=(1, 1, 1))
+        arima_model = ARIMA(ts, order=(5, 1, 1))
         arima_fit = arima_model.fit()
         arima_forecast = arima_fit.forecast(steps=steps)
         arima_residuals = arima_fit.resid[1:]  # Skip first NaN from differencing
@@ -63,11 +63,12 @@ def forecast_profit():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/analysis/trend', methods=['GET'])
 def trend_analysis():
     try:
         df = get_sales_df()
-        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].mean()
+        daily_profit = df.groupby(df['timestamp'].dt.date)['profit'].sum()
         ts = daily_profit.sort_index().reset_index()
         ts.columns = ['date', 'profit']
         ts['date'] = ts['date'].astype(str)
